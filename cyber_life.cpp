@@ -1,4 +1,4 @@
-#include "CyberLife.h"
+#include "cyber_life.h"
 
 CyberLife::CyberLife(QWidget *parent)
     : QWidget(parent)

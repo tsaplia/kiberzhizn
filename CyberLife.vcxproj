@@ -83,9 +83,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Node.cpp" />
     <QtRcc Include="CyberLife.qrc" />
-    <QtMoc Include="CyberLife.h" />
-    <ClCompile Include="CyberLife.cpp" />
+    <QtMoc Include="cyber_life.h" />
+    <ClCompile Include="cyber_life.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
