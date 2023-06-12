@@ -1,58 +1,96 @@
 #include "animal.h"
+#include "field.h"
 
-const int DEFAULT_ENERGY = 200;
-const int PHOTOSYNTHESIS_ENERGY = 20;
+const int DEFAULT_ENERGY = 8;
+const int PHOTOSYNTHESIS_ENERGY = 4;
+const int KILL_ENERGY = 8;
+const int REPRODUCTION_ENERGY = 8;
 
-Animal::Animal(int x, int y, Field* parent) {
+const std::pair<int, int> LOOKS_AT_BORDER = std::make_pair(-1,-1);
+
+
+Animal::Animal(int x, int y, Field* parent, QColor color = QColor()) { 
 	m_direction = AnimalDirections::up;
 	m_x = x;
 	m_y = y;
 	m_energy = DEFAULT_ENERGY;
 	m_parent = parent;
+	if (!color.isValid()) {
+		srand(time(0));
+		color = QColor(rand() % 255, rand() % 255, rand() % 255);
+	}
+	m_color = color;
+	m_attacks_cnt = m_synthesis_cnt = 0;
 }
 
-Animal::~Animal() {
-	
-}
-
-std::pair<int, int> Animal::CalcNextPosition() {
+std::pair<int, int> Animal::LooksAt() {
 	int x = m_x, y = m_y;
 	switch (m_direction)
 	{
 	case AnimalDirections::down:
-		if (m_y < m_parent->Height()) y++;
+		y++;
 		break;
 	case AnimalDirections::left:
-		if (m_x >= 0) x--;
+		x--;
 		break;
 	case AnimalDirections::right:
-		if (m_x < m_parent->Width()) x++;
+		x++;
 		break;
 	case AnimalDirections::up:
-		if (m_y >= 0) y--;
+		y--;
 		break;
 	}
-	return { x,y };
+	return (m_parent->IsInside(x, y) ? std::make_pair(x, y) : LOOKS_AT_BORDER);
+}
+
+bool Animal::CanMove() {
+	return LooksAt() != LOOKS_AT_BORDER;
 }
 
 void Animal::Move() {
-	std::pair<int, int> pos = CalcNextPosition();
-	m_x = pos.first, m_y = pos.second;
+	std::pair<int, int> look = LooksAt();
+	m_x = look.first, m_y = look.second;
 	m_parent->UpdatePosition(this, m_x, m_y);
 }
 
-void Animal::Photosynthesis() {
-	m_energy += DEFAULT_ENERGY;
+bool Animal::CanSynthesize() {
+	return m_parent->getSurface(m_x, m_y) == SurfaceTypes::earth;
 }
 
-void Animal::Atack() {
-	std::pair<int, int> pos = CalcNextPosition();
-	if (pos.first != m_x || pos.second != m_y) {
-		m_parent->KillAnimal(pos.first, pos.second);
-	}
+void Animal::Photosynthesis() {
+	m_energy += PHOTOSYNTHESIS_ENERGY;
+	m_attacks_cnt++;
+}
+
+bool Animal::CanAttack() {
+	std::pair<int, int> look = LooksAt();
+	return look != LOOKS_AT_BORDER && m_parent->GetAnimal(look.first, look.second);
+}
+
+void Animal::Attack() {
+	std::pair<int, int> look = LooksAt();
+	m_parent->KillAnimal(look.first, look.second);
+	m_energy += KILL_ENERGY;
+	m_attacks_cnt++;
+}
+
+bool Animal::CanReproduce() {
+	std::pair<int, int> look = LooksAt();
+	return look != LOOKS_AT_BORDER && !m_parent->GetAnimal(look.first, look.second) && 
+		m_energy > REPRODUCTION_ENERGY;
+}
+
+void Animal::Reproduction() {
+	std::pair<int, int> look = LooksAt();
+	m_parent->AddAnimal(look.first, look.second, m_color);
+	m_energy -= REPRODUCTION_ENERGY;
 }
 
 void Animal::Motion() {
+
+}
+
+Animal::~Animal() {
 
 }
 
