@@ -10,6 +10,22 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="cyber_life.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="cyber_life.qrc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="animal.cpp" />
+    <ClCompile Include="cyber_life.cpp" />
+    <ClCompile Include="field.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="animal.h" />
+    <ClInclude Include="field.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FF2EAA55-A50F-4C2C-9693-7DB5A3F9D987}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>
@@ -82,13 +98,6 @@
       <GenerateDebugInformation>false</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Node.cpp" />
-    <QtRcc Include="CyberLife.qrc" />
-    <QtMoc Include="cyber_life.h" />
-    <ClCompile Include="cyber_life.cpp" />
-    <ClCompile Include="main.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />
