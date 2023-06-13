@@ -10,14 +10,15 @@ private: // variables
 	double m_output = 0;
 	bool m_factive_use = 0;
 	std::vector<std::pair<Node*, double>> m_directions;
+	double Random();
 
 public: // functions
-	Node(std::vector<std::pair<Node*, double>> directions);
+	Node(std::vector<Node*> directions);
 	~Node();
 	void ActivationFunction();
-	std::vector<std::pair<Node*, double>> GetDirections();
 	void AddValueToInput(double value);
-	void AddValueToOutput(double value);
+	void SetValueToOutput(double value);
 	double GetOutput();
 	void Mutation();
+	void Sending();
 };

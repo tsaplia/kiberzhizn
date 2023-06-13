@@ -13,12 +13,14 @@
   <ItemGroup>
     <ClCompile Include="cyber_life.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="network_of_nodes.cpp" />
     <ClCompile Include="node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="cyber_life.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="network_of_nodes.h" />
     <ClInclude Include="node.h" />
   </ItemGroup>
   <ItemGroup>
