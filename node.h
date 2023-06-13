@@ -19,6 +19,7 @@ public: // functions
 	void AddValueToInput(double value);
 	void SetValueToOutput(double value);
 	double GetOutput();
+	double GetInput();
 	void Mutation();
 	void Sending();
 };

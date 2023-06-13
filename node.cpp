@@ -39,6 +39,10 @@ double Node::GetOutput() { // when we take output, we need calc it and call acti
 	return m_output;
 }
 
+double Node::GetInput() {
+	return m_input;
+}
+
 void Node::Mutation() { // randon weight of node change to random value from -1 to 1 in double
 	int x = rand() % m_directions.size();
 	m_directions[x].second = Random();
@@ -66,5 +70,6 @@ double Node::Random() {
 }
 
 Node::~Node() {
-
+	m_directions.clear();
+	m_directions.shrink_to_fit();
 }

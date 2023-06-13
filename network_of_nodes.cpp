@@ -29,7 +29,7 @@ std::vector<double> NetworkOfNodes::Calculations(std::vector<double> values) { /
 	std::vector<double> calc_values;
 	int i = m_size_of_network.size() - 1;
 	for (int j = 0; j < m_size_of_network[i]; j++) {
-		calc_values.push_back(m_network[i][j]->GetOutput()); // or input?
+		calc_values.push_back(m_network[i][j]->GetInput()); // or input? input
 	}
 	return calc_values;
 }
@@ -47,5 +47,8 @@ void NetworkOfNodes::Mutations() {
 }
 
 NetworkOfNodes::~NetworkOfNodes() {
-
+	m_network.clear();
+	m_network.shrink_to_fit();
+	m_size_of_network.clear();
+	m_size_of_network.shrink_to_fit();
 }
