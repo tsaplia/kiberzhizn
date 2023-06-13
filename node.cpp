@@ -1,0 +1,75 @@
+#include "node.h"
+
+Node::Node(std::vector<Node*> directions) {
+	srand(time(NULL));
+	m_directions.resize(directions.size());
+	for (int i = 0; i < directions.size(); i++) {
+		m_directions[i].first = directions[i];
+		m_directions[i].second = Random();
+	}
+}
+
+void Node::ActivationFunction() { // use to converte m_input to m_output
+	if (m_input > 0.4) m_output = 1;
+	else if (m_input > -0.4) m_output = 0;
+	else m_output = -1;
+	m_input = 0;
+	
+	return;
+}
+
+void Node::AddValueToInput(double value) { // factivate = false, cuz input change and result of activate function can change
+	m_input += value;
+	m_factive_use = false;
+
+	return;
+}
+
+void Node::SetValueToOutput(double value) {
+	m_output = value;
+	m_factive_use = true;
+
+	return;
+}
+double Node::GetOutput() { // when we take output, we need calc it and call activate function
+	if (!m_factive_use) {
+		ActivationFunction();
+		m_factive_use = true;
+	}
+	return m_output;
+}
+
+double Node::GetInput() {
+	return m_input;
+}
+
+void Node::Mutation() { // randon weight of node change to random value from -1 to 1 in double
+	int x = rand() % m_directions.size();
+	m_directions[x].second = Random();
+
+	return;
+}
+
+void Node::Sending() {
+	if (!m_factive_use) {
+		ActivationFunction();
+		m_factive_use = true;
+	}
+	for (auto it : m_directions) {
+		it.first->AddValueToInput(it.second * m_output);
+	}
+
+	return;
+}
+
+double Node::Random() {
+	int rand_maxi = 20000;
+	double buf = (rand() % rand_maxi) - rand_maxi / 2;
+	double rand_maxd = rand_maxi;
+	return buf / (rand_maxd / 2);
+}
+
+Node::~Node() {
+	m_directions.clear();
+	m_directions.shrink_to_fit();
+}

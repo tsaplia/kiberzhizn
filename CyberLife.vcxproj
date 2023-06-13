@@ -11,20 +11,24 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="cyber_life.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <QtRcc Include="cyber_life.qrc" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="animal.cpp" />
     <ClCompile Include="cyber_life.cpp" />
     <ClCompile Include="field.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="network_of_nodes.cpp" />
+    <ClCompile Include="node.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="cyber_life.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animal.h" />
     <ClInclude Include="field.h" />
+    <ClInclude Include="network_of_nodes.h" />
+    <ClInclude Include="node.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <QtRcc Include="cyber_life.qrc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FF2EAA55-A50F-4C2C-9693-7DB5A3F9D987}</ProjectGuid>
