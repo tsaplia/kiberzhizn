@@ -11,7 +11,8 @@ public:
     ~Field();
     int Width();
     int Height();
-    void AddAnimal(int x, int y, QColor color);
+    void AddAnimal(int x, int y);
+    void AddAnimal(int x, int y, Animal* animal);
     Animal* GetAnimal(int x, int y);
     void KillAnimal(int x, int y);
     void KillAnimal(Animal* animal);

@@ -15,16 +15,22 @@ int Field::Height() {
 	return m_height;
 }
 
-void Field::AddAnimal(int x, int y, QColor color = QColor()) {
-	if (!IsInside(x, y)) return;
+void Field::AddAnimal(int x, int y) {
+	if (IsInside(x, y)) {
+		AddAnimal(x, y, new Animal(x, y, this));
+	}
+}
 
-	m_animals[x][y] = new Animal(x, y, this, color);
-	m_animal_list[m_animals[x][y]] = { x,y };
+void Field::AddAnimal(int x, int y, Animal* animal) {
+	if (IsInside(x, y)) {
+		m_animals[x][y] = animal;
+		m_animal_list[m_animals[x][y]] = { x,y };
+	}
+
 }
 
 Animal* Field::GetAnimal(int x, int y) {
-	if (!IsInside(x, y)) return nullptr;
-	return m_animals[x][y];
+	return (IsInside(x, y) ? m_animals[x][y] : nullptr);
 }
 
 void Field::KillAnimal(int x, int y) {
@@ -58,6 +64,13 @@ bool Field::IsInside(int x, int y) {
 }
 
 Field::~Field() {
+	for (int i = 0; i < m_width; i++) {
+		for (int j = 0; j < m_height; j++) {
+			delete m_animals[i][j];
+		}
+		m_animals[i].clear();
+		m_animals[i].shrink_to_fit();
+	}
 	m_animals.clear();
 	m_animals.shrink_to_fit();
 	m_animal_list.clear();

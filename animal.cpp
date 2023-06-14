@@ -9,17 +9,27 @@ const int REPRODUCTION_ENERGY = 8;
 const std::pair<int, int> LOOKS_AT_BORDER = std::make_pair(-1,-1);
 
 
-Animal::Animal(int x, int y, Field* parent, QColor color = QColor()) { 
-	m_direction = AnimalDirections::up;
+Animal::Animal(int x, int y, Field* parent) {
+	InitEmpty(x, y, parent);
+
+	srand(time(0));
+	m_color = QColor(rand() % 255, rand() % 255, rand() % 255);
+	m_brain = new NetworkOfNodes();
+}
+
+Animal::Animal(int x, int y, Field* parent, NetworkOfNodes* brain, QColor color) {
+	InitEmpty(x, y, parent);
+
+	m_color = color;
+	m_brain = brain;
+}
+
+void Animal::InitEmpty(int x, int y, Field* parent) {
 	m_x = x;
 	m_y = y;
-	m_energy = DEFAULT_ENERGY;
 	m_parent = parent;
-	if (!color.isValid()) {
-		srand(time(0));
-		color = QColor(rand() % 255, rand() % 255, rand() % 255);
-	}
-	m_color = color;
+	m_direction = AnimalDirections::up;
+	m_energy = DEFAULT_ENERGY;
 	m_attacks_cnt = m_synthesis_cnt = 0;
 }
 
@@ -82,15 +92,76 @@ bool Animal::CanReproduce() {
 
 void Animal::Reproduction() {
 	std::pair<int, int> look = LooksAt();
-	m_parent->AddAnimal(look.first, look.second, m_color);
+	m_parent->AddAnimal(look.first, look.second, Animal::Mutation(this));
 	m_energy -= REPRODUCTION_ENERGY;
 }
 
 void Animal::Motion() {
+	std::vector<double> input = GetBrainInput();
+	std::vector<double> output = m_brain->Calculations(input);
 
+	if (!CanMove()) output[0] = -INFINITY;
+	if(!CanAttack()) output[1] = -INFINITY;
+	if (!CanSynthesize()) output[2] = -INFINITY;
+	if (!CanReproduce()) output[3] = -INFINITY;
+
+	int res_ind = std::max_element(output.begin(), output.begin()+4) - output.begin();
+	if (output[res_ind] != -INFINITY) {
+		switch (res_ind)
+		{
+		case 0:
+			Move();
+			break;
+		case 1:
+			Attack();
+			break;
+		case 2:
+			Photosynthesis();
+			break;
+		case 3:
+			Reproduction();
+			break;
+		}
+	}
+	
+	//// something to do with directions
+}
+
+std::vector<double> Animal::GetBrainInput() {
+	std::vector<double> input(5, 0);
+	input[0] = std::min(1.0, (double)m_energy / 100);
+
+	std::pair<int, int> look = LooksAt();
+	if (!m_parent->IsInside(look.first, look.second)) {
+		input[1] = 0;
+	}
+	else if (m_parent->GetAnimal(look.first, look.second)) {
+		input[1] = 1;
+
+		QColor color =  m_parent->GetAnimal(look.first, look.second)->m_color;
+		int int_color = (color.red() << 16) | (color.green() << 8) | color.blue();
+		input[2] = (double)int_color / (1 << 24);
+	}
+	else {
+		input[1] = -1;
+	}
+
+	input[3] = (double)m_y / m_parent->Height();
+	input[4] = (double)m_x / m_parent->Width();
+
+	return input;
 }
 
 Animal::~Animal() {
-
+	delete m_brain;
 }
+
+Animal* Animal::Mutation(Animal* animal) {
+	NetworkOfNodes* brain = animal->m_brain; // change
+	QColor color = animal->m_color; //change
+
+	std::pair<int, int> pos = animal->LooksAt();
+	return new Animal(pos.first, pos.second, animal->m_parent, brain, color);
+}
+
 
