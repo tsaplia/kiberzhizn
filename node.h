@@ -14,12 +14,14 @@ private: // variables
 
 public: // functions
 	Node(std::vector<Node*> directions);
+	Node(std::vector<Node*> directions, std::vector<double> values);
 	~Node();
 	void ActivationFunction();
 	void AddValueToInput(double value);
 	void SetValueToOutput(double value);
 	double GetOutput();
 	double GetInput();
+	std::vector<double> GetDirectionsValues();
 	void Mutation();
 	void Sending();
 };

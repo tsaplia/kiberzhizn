@@ -12,7 +12,8 @@ private:
 
 public:
 	NetworkOfNodes();
+	NetworkOfNodes(NetworkOfNodes* net);
 	~NetworkOfNodes();
 	std::vector<double> Calculations(std::vector<double> values);
-	void Mutations();
+	int Mutations();
 };
