@@ -14,9 +14,11 @@
     <ClCompile Include="animal.cpp" />
     <ClCompile Include="cyber_life.cpp" />
     <ClCompile Include="field.cpp" />
+    <ClCompile Include="interface.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="network_of_nodes.cpp" />
     <ClCompile Include="node.cpp" />
+    <ClCompile Include="painter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="cyber_life.h" />
@@ -24,8 +26,10 @@
   <ItemGroup>
     <ClInclude Include="animal.h" />
     <ClInclude Include="field.h" />
+    <QtMoc Include="interface.h" />
     <ClInclude Include="network_of_nodes.h" />
     <ClInclude Include="node.h" />
+    <QtMoc Include="painter.h" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="cyber_life.qrc" />
