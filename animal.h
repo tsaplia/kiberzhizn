@@ -6,7 +6,7 @@
 
 class Field; 
 
-enum class AnimalDirections { left, up, right, down };
+enum AnimalDirections { left, up, right, down };
 
 class Animal
 {

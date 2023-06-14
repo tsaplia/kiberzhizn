@@ -124,7 +124,8 @@ void Animal::Motion() {
 		}
 	}
 	
-	//// something to do with directions
+	if (input[4] > 0.4) m_direction = AnimalDirections((m_direction + 1) % 4);
+	else if (input[4] < -0.4) m_direction = AnimalDirections((4 + m_direction - 1) % 4);
 }
 
 std::vector<double> Animal::GetBrainInput() {
@@ -157,11 +158,12 @@ Animal::~Animal() {
 }
 
 Animal* Animal::Mutation(Animal* animal) {
-	NetworkOfNodes* brain = animal->m_brain; // change
-	QColor color = animal->m_color; //change
+	NetworkOfNodes* brain = new NetworkOfNodes(animal->m_brain); 
+	QColor color = animal->m_color;
+
+	int mutations_cnt = animal->m_brain->Mutations();
+	color.setHsl((color.hue() + mutations_cnt) % 360, color.saturation(), color.lightness());
 
 	std::pair<int, int> pos = animal->LooksAt();
 	return new Animal(pos.first, pos.second, animal->m_parent, brain, color);
 }
-
-
