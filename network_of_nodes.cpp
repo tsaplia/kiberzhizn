@@ -35,6 +35,22 @@ NetworkOfNodes::NetworkOfNodes(NetworkOfNodes* net) {
 	}
 }
 
+NetworkOfNodes::~NetworkOfNodes() {
+	for (int i = 0; i < m_size_of_network.size(); i++) {
+		for (int j = 0; j < m_size_of_network[i]; j++) {
+			delete m_network[i][j];
+		}
+		m_network[i].clear();
+		m_network[i].shrink_to_fit();
+	}
+
+
+	m_network.clear();
+	m_network.shrink_to_fit();
+	m_size_of_network.clear();
+	m_size_of_network.shrink_to_fit();
+}
+
 std::vector<double> NetworkOfNodes::Calculations(std::vector<double> values) { // calc valus through network of nodes
 	for (int i = 0; i < m_size_of_network.size()-1; i++) {
 		for (int j = 0; j < m_size_of_network[i]; j++) {
@@ -56,25 +72,10 @@ int NetworkOfNodes::Mutations() {
 	int max_mutations = 6;
 	int amount = rand() % max_mutations + 1;
 	for (int q = 0; q < amount; q++) {
-		int i_am = rand() % m_size_of_network.size();
+		int i_am = rand() % (m_size_of_network.size()-1);
 		int j_am = rand() % m_size_of_network[i_am];
 		m_network[i_am][j_am]->Mutation();
 	}
 	return amount;
 }
 
-NetworkOfNodes::~NetworkOfNodes() {
-	for (int i = 0; i < m_size_of_network.size(); i++) {
-		for (int j = 0; j < m_size_of_network[i]; j++) {
-			delete m_network[i][j];
-		}
-		m_network[i].clear();
-		m_network[i].shrink_to_fit();
-	}
-
-
-	m_network.clear();
-	m_network.shrink_to_fit();
-	m_size_of_network.clear();
-	m_size_of_network.shrink_to_fit();
-}

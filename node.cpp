@@ -18,6 +18,11 @@ Node::Node(std::vector<Node*> directions, std::vector<double> values) {
 	}
 }
 
+Node::~Node() {
+	m_directions.clear();
+	m_directions.shrink_to_fit();
+}
+
 void Node::ActivationFunction() { // use to converte m_input to m_output
 	if (m_input > 0.4) m_output = 1;
 	else if (m_input > -0.4) m_output = 0;
@@ -40,6 +45,7 @@ void Node::SetValueToOutput(double value) {
 
 	return;
 }
+
 double Node::GetOutput() { // when we take output, we need calc it and call activate function
 	if (!m_factive_use) {
 		ActivationFunction();
@@ -50,6 +56,15 @@ double Node::GetOutput() { // when we take output, we need calc it and call acti
 
 double Node::GetInput() {
 	return m_input;
+}
+
+void Node::SetWeightMulti(double value) {
+	m_weight_multi = value;
+	return;
+}
+
+double Node::GetWeightMulti() {
+	return m_weight_multi;
 }
 
 std::vector<double> Node::GetDirectionsValues() {
@@ -81,10 +96,5 @@ void Node::Sending() {
 double Node::Random() {
 	int rand_maxi = 20000;
 	double buf = (rand() % rand_maxi) - rand_maxi / 2;
-	return buf / ((double)rand_maxi / 2);
-}
-
-Node::~Node() {
-	m_directions.clear();
-	m_directions.shrink_to_fit();
+	return (buf / ((double)rand_maxi / 2)) * m_weight_multi;
 }
