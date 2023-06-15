@@ -7,11 +7,11 @@ PainterArea::PainterArea() {
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(TimerTick()));
 	Start();
 	m_state = States::paused;
-	m_animal_color = AnimalColors::life;
+	m_animal_color = AnimalColors::family;
 }
 
 PainterArea::~PainterArea() {
-	
+	delete m_field;
 }
 
 void PainterArea::paintEvent(QPaintEvent* event) {
