@@ -17,8 +17,9 @@ public:
     void KillAnimal(int x, int y);
     void KillAnimal(Animal* animal);
     void UpdatePosition(Animal* animal, int x, int y);
-    SurfaceTypes getSurface(int x, int y);
+    SurfaceTypes GetSurface(int x, int y);
     bool IsInside(int x, int y);
+    void Moution();
 
 private:
     int m_water_level;

@@ -15,6 +15,8 @@ public:
     Animal(int x, int y, Field* parent, NetworkOfNodes* brain, QColor color);
     ~Animal();
     void Motion();
+    QColor GetLifeColor();
+    QColor GetFamilyColor();
 
 private:
     void InitEmpty(int x, int y, Field* parent);

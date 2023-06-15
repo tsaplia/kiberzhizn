@@ -5,6 +5,7 @@ const int DEFAULT_ENERGY = 8;
 const int PHOTOSYNTHESIS_ENERGY = 4;
 const int KILL_ENERGY = 8;
 const int REPRODUCTION_ENERGY = 8;
+int COLORS_IN_MOUTION = 6;
 
 const std::pair<int, int> LOOKS_AT_BORDER = std::make_pair(-1,-1);
 
@@ -12,7 +13,7 @@ const std::pair<int, int> LOOKS_AT_BORDER = std::make_pair(-1,-1);
 Animal::Animal(int x, int y, Field* parent) {
 	InitEmpty(x, y, parent);
 
-	srand(time(0));
+	srand(time(NULL));
 	m_color = QColor(rand() % 255, rand() % 255, rand() % 255);
 	m_brain = new NetworkOfNodes();
 }
@@ -64,12 +65,12 @@ void Animal::Move() {
 }
 
 bool Animal::CanSynthesize() {
-	return m_parent->getSurface(m_x, m_y) == SurfaceTypes::earth;
+	return m_parent->GetSurface(m_x, m_y) == SurfaceTypes::earth;
 }
 
 void Animal::Photosynthesis() {
 	m_energy += PHOTOSYNTHESIS_ENERGY;
-	m_attacks_cnt++;
+	m_synthesis_cnt++;
 }
 
 bool Animal::CanAttack() {
@@ -151,6 +152,21 @@ std::vector<double> Animal::GetBrainInput() {
 	input[4] = (double)m_x / m_parent->Width();
 
 	return input;
+}
+
+QColor Animal::GetLifeColor() {
+	QColor color = QColor(255,255,0);
+	if (m_synthesis_cnt > m_attacks_cnt) {
+		color.setRed(std::max(0, 255 - COLORS_IN_MOUTION * (m_synthesis_cnt - m_attacks_cnt)));
+	}
+	else {
+		color.setGreen(std::max(0, 255 - COLORS_IN_MOUTION * (m_attacks_cnt -m_synthesis_cnt)));
+	}
+	return color;
+}
+
+QColor Animal::GetFamilyColor() {
+	return this->m_color;
 }
 
 Animal::~Animal() {
