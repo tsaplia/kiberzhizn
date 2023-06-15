@@ -7,9 +7,9 @@
 #include "field.h"
 #include "painter.h"
 
-const int ROWS = 30;
-const int COLUMNS = 30;
-const int TIMER_INTERVAL = 1000;
+const int ROWS = 60;
+const int COLUMNS = 60;
+const int TIMER_INTERVAL = 500;
 
 
 enum class States {paused, working};

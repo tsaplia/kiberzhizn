@@ -25,6 +25,7 @@ private:
     int m_water_level;
     int m_width;
     int m_height;
+    QSet<Animal*> m_processed;
     std::vector<std::vector<Animal*>> m_animals;
     std::map<Animal*, std::pair<int, int>> m_animal_list;
 };
