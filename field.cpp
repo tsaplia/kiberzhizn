@@ -22,11 +22,10 @@ void Field::AddAnimal(int x, int y) {
 }
 
 void Field::AddAnimal(int x, int y, Animal* animal) {
-	if (IsInside(x, y)) {
-		m_animals[x][y] = animal;
-		m_animal_list[m_animals[x][y]] = { x,y };
-	}
-
+	if (!IsInside(x, y)) return;
+	if (this->GetAnimal(x, y)) this->KillAnimal(x, y);
+	m_animals[x][y] = animal;
+	m_animal_list[m_animals[x][y]] = { x,y };
 }
 
 Animal* Field::GetAnimal(int x, int y) {
@@ -55,12 +54,22 @@ void Field::UpdatePosition(Animal* animal, int x, int y) {
 	m_animals[x][y] = animal;
 }
 
-SurfaceTypes Field::getSurface(int x, int y) {
+SurfaceTypes Field::GetSurface(int x, int y) {
 	return (y >= m_water_level ? SurfaceTypes::water : SurfaceTypes::earth);
 }
 
 bool Field::IsInside(int x, int y) {
 	return x >= 0 && x < m_width && y >= 0 && y < m_height;
+}
+
+void Field::Moution() {
+	for (int i = 0; i < m_width; i++) {
+		for (int j = 0; j < m_height; j++) {
+			if (m_animals[i][j]) {
+				m_animals[i][j]->Motion();
+			}
+		}
+	}
 }
 
 Field::~Field() {
@@ -75,4 +84,6 @@ Field::~Field() {
 	m_animals.shrink_to_fit();
 	m_animal_list.clear();
 }
+
+
 
