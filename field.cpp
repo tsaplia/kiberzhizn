@@ -26,6 +26,7 @@ void Field::AddAnimal(int x, int y, Animal* animal) {
 	if (this->GetAnimal(x, y)) this->KillAnimal(x, y);
 	m_animals[x][y] = animal;
 	m_animal_list[m_animals[x][y]] = { x,y };
+	m_processed.insert(animal);
 }
 
 Animal* Field::GetAnimal(int x, int y) {
@@ -46,12 +47,13 @@ void Field::KillAnimal(Animal* animal) {
 }
 
 void Field::UpdatePosition(Animal* animal, int x, int y) {
-	if (!IsInside(x, y)) return;
+	if (!IsInside(x, y) || m_animals[x][y]) return;
 
 	std::pair<int, int> old_pos = m_animal_list[animal];
 	m_animals[old_pos.first][old_pos.second] = nullptr;
 	m_animal_list[animal] = { x,y };
 	m_animals[x][y] = animal;
+	m_processed.insert(animal);
 }
 
 SurfaceTypes Field::GetSurface(int x, int y) {
@@ -65,11 +67,13 @@ bool Field::IsInside(int x, int y) {
 void Field::Moution() {
 	for (int i = 0; i < m_width; i++) {
 		for (int j = 0; j < m_height; j++) {
-			if (m_animals[i][j]) {
+			if (m_animals[i][j] && !m_processed.contains(m_animals[i][j])) {
 				m_animals[i][j]->Motion();
 			}
 		}
 	}
+
+	m_processed.clear();
 }
 
 Field::~Field() {

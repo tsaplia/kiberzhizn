@@ -1,11 +1,12 @@
 #include "animal.h"
 #include "field.h"
 
-const int DEFAULT_ENERGY = 8;
+const int DEFAULT_ENERGY = 4;
 const int PHOTOSYNTHESIS_ENERGY = 4;
 const int KILL_ENERGY = 8;
 const int REPRODUCTION_ENERGY = 8;
-int COLORS_IN_MOUTION = 6;
+const int COLORS_IN_MOUTION = 2;
+const int MAX_ENERGY = 25;
 
 const std::pair<int, int> LOOKS_AT_BORDER = std::make_pair(-1,-1);
 
@@ -14,7 +15,7 @@ Animal::Animal(int x, int y, Field* parent) {
 	InitEmpty(x, y, parent);
 
 	srand(time(NULL));
-	m_color = QColor(rand() % 255, rand() % 255, rand() % 255);
+	m_color = QColor::fromHsl(rand() % 360, 255, rand()%156);
 	m_brain = new NetworkOfNodes();
 }
 
@@ -29,7 +30,7 @@ void Animal::InitEmpty(int x, int y, Field* parent) {
 	m_x = x;
 	m_y = y;
 	m_parent = parent;
-	m_direction = AnimalDirections::up;
+	m_direction = AnimalDirections(rand()%4);
 	m_energy = DEFAULT_ENERGY;
 	m_attacks_cnt = m_synthesis_cnt = 0;
 }
@@ -65,7 +66,7 @@ void Animal::Move() {
 }
 
 bool Animal::CanSynthesize() {
-	return m_parent->GetSurface(m_x, m_y) == SurfaceTypes::earth;
+	return m_parent->GetSurface(m_x, m_y) == SurfaceTypes::earth && m_energy <= MAX_ENERGY;
 }
 
 void Animal::Photosynthesis() {
@@ -125,8 +126,12 @@ void Animal::Motion() {
 		}
 	}
 	
-	if (input[4] > 0.4) m_direction = AnimalDirections((m_direction + 1) % 4);
-	else if (input[4] < -0.4) m_direction = AnimalDirections((4 + m_direction - 1) % 4);
+	if (output[4] > 0.4) m_direction = AnimalDirections((m_direction + 1) % 4);
+	else if (output[4] < -0.4) m_direction = AnimalDirections((4 + m_direction - 1) % 4);
+	m_energy--;
+	if (m_energy == 0) {
+		m_parent->KillAnimal(m_x, m_y);
+	}
 }
 
 std::vector<double> Animal::GetBrainInput() {
@@ -149,7 +154,7 @@ std::vector<double> Animal::GetBrainInput() {
 	}
 
 	input[3] = (double)m_y / m_parent->Height();
-	input[4] = (double)m_x / m_parent->Width();
+	input[4] = 0;
 
 	return input;
 }
@@ -167,6 +172,10 @@ QColor Animal::GetLifeColor() {
 
 QColor Animal::GetFamilyColor() {
 	return this->m_color;
+}
+
+int Animal::GetEnergy() {
+	return this->m_energy;
 }
 
 Animal::~Animal() {

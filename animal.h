@@ -17,6 +17,7 @@ public:
     void Motion();
     QColor GetLifeColor();
     QColor GetFamilyColor();
+    int GetEnergy();
 
 private:
     void InitEmpty(int x, int y, Field* parent);
