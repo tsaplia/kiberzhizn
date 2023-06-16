@@ -8,7 +8,7 @@
 #include "painter.h"
 
 
-enum class States {paused, working};
+enum class States {paused, working, start, file};
 enum class AnimalColors {life, family, energy};
 
 class PainterArea : public QWidget
@@ -38,7 +38,7 @@ private:
     Field* m_field;
     QTimer* m_timer;
     int m_row = 60;
-    int m_col = 60;
+    int m_col = 80;
     int m_timer_interval = 500;
     int m_width;
     int m_height;

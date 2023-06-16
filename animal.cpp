@@ -9,7 +9,7 @@ Animal::Animal(int x, int y, Field* parent) {
 	InitEmpty(x, y, parent);
 
 	srand(time(NULL));
-	m_color = QColor::fromHsl(rand() % 360, 255, rand()%156);
+	m_color = QColor::fromHsl(rand() % 360, 255, 30+rand()%156);
 	m_brain = new NetworkOfNodes();
 }
 

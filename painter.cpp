@@ -4,7 +4,7 @@ PainterArea::PainterArea() {
 	m_field = new Field(m_col, m_row);
 	m_timer = new QTimer();
 	m_timer->setInterval(m_timer_interval);
-	connect(m_timer, SIGNAL(timeout()), this, SLOT(TimerTick()));
+	connect(m_timer, &QTimer::timeout, this, &PainterArea::TimerTick);
 	m_state = States::paused;
 }
 
@@ -14,7 +14,9 @@ PainterArea::~PainterArea() {
 
 void PainterArea::paintEvent(QPaintEvent* event) {
 	QPainter painter(this);
-	painter.setPen(Qt::white);
+	QPen pen = QPen(Qt::white);
+	//pen.setWidth(2);
+	painter.setPen(pen);
 
 	for (int x = 0; x < m_col; x++) {
 		for (int y = 0; y < m_row; y++) {
@@ -43,8 +45,9 @@ void PainterArea::paintEvent(QPaintEvent* event) {
 }
 
 void PainterArea::resizeEvent(QResizeEvent* event) {
-	m_width = this->width();
 	m_height = this->height();
+	this->setFixedWidth(m_height*m_col/m_row);
+	m_width = this->width();
 	m_ceil_width = (double)m_width / m_col;
 	m_ceil_height = (double)m_height / m_row;
 }
