@@ -19,6 +19,13 @@ public:
     QColor GetFamilyColor();
     int GetEnergy();
 
+    static void SetDefaultEnergy(int value);
+    static void SetPhotosynthesisEnergy(int value);
+    static void SetKillEnergy(int value);
+    static void SetReproductionEnergy(int value);
+    static void SetColorsInMoution(int value);
+    static void SetMaxEnergy(int value);
+
 private:
     void InitEmpty(int x, int y, Field* parent);
     std::pair<int, int> LooksAt();
@@ -42,4 +49,12 @@ private:
     AnimalDirections m_direction;
     int m_attacks_cnt;
     int m_synthesis_cnt;
+
+    inline static int m_default_energy = 10;
+    inline static int m_photosynthesis_energy = 8;
+    inline static int m_kill_energy = 8;
+    inline static int m_reproduction_energy = 10;
+    inline static int m_colors_in_moution = 10;
+    inline static int m_max_energy = 10;
+
 };

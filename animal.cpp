@@ -1,12 +1,6 @@
 #include "animal.h"
 #include "field.h"
 
-const int DEFAULT_ENERGY = 4;
-const int PHOTOSYNTHESIS_ENERGY = 4;
-const int KILL_ENERGY = 8;
-const int REPRODUCTION_ENERGY = 8;
-const int COLORS_IN_MOUTION = 2;
-const int MAX_ENERGY = 25;
 
 const std::pair<int, int> LOOKS_AT_BORDER = std::make_pair(-1,-1);
 
@@ -31,7 +25,7 @@ void Animal::InitEmpty(int x, int y, Field* parent) {
 	m_y = y;
 	m_parent = parent;
 	m_direction = AnimalDirections(rand()%4);
-	m_energy = DEFAULT_ENERGY;
+	m_energy = m_default_energy;
 	m_attacks_cnt = m_synthesis_cnt = 0;
 }
 
@@ -66,11 +60,11 @@ void Animal::Move() {
 }
 
 bool Animal::CanSynthesize() {
-	return m_parent->GetSurface(m_x, m_y) == SurfaceTypes::earth && m_energy <= MAX_ENERGY;
+	return m_parent->GetSurface(m_x, m_y) == SurfaceTypes::earth && m_energy <= m_max_energy;
 }
 
 void Animal::Photosynthesis() {
-	m_energy += PHOTOSYNTHESIS_ENERGY;
+	m_energy += m_photosynthesis_energy;
 	m_synthesis_cnt++;
 }
 
@@ -82,20 +76,20 @@ bool Animal::CanAttack() {
 void Animal::Attack() {
 	std::pair<int, int> look = LooksAt();
 	m_parent->KillAnimal(look.first, look.second);
-	m_energy += KILL_ENERGY;
+	m_energy += m_kill_energy;
 	m_attacks_cnt++;
 }
 
 bool Animal::CanReproduce() {
 	std::pair<int, int> look = LooksAt();
 	return look != LOOKS_AT_BORDER && !m_parent->GetAnimal(look.first, look.second) && 
-		m_energy > REPRODUCTION_ENERGY;
+		m_energy > m_reproduction_energy;
 }
 
 void Animal::Reproduction() {
 	std::pair<int, int> look = LooksAt();
 	m_parent->AddAnimal(look.first, look.second, Animal::Mutation(this));
-	m_energy -= REPRODUCTION_ENERGY;
+	m_energy -= m_reproduction_energy;
 }
 
 void Animal::Motion() {
@@ -162,10 +156,10 @@ std::vector<double> Animal::GetBrainInput() {
 QColor Animal::GetLifeColor() {
 	QColor color = QColor(255,255,0);
 	if (m_synthesis_cnt > m_attacks_cnt) {
-		color.setRed(std::max(0, 255 - COLORS_IN_MOUTION * (m_synthesis_cnt - m_attacks_cnt)));
+		color.setRed(std::max(0, 255 - m_colors_in_moution * (m_synthesis_cnt - m_attacks_cnt)));
 	}
 	else {
-		color.setGreen(std::max(0, 255 - COLORS_IN_MOUTION * (m_attacks_cnt -m_synthesis_cnt)));
+		color.setGreen(std::max(0, 255 - m_colors_in_moution * (m_attacks_cnt -m_synthesis_cnt)));
 	}
 	return color;
 }
@@ -191,4 +185,28 @@ Animal* Animal::Mutation(Animal* animal) {
 
 	std::pair<int, int> pos = animal->LooksAt();
 	return new Animal(pos.first, pos.second, animal->m_parent, brain, color);
+}
+
+void Animal::SetDefaultEnergy(int value) {
+	m_default_energy = value;
+}
+
+void Animal::SetPhotosynthesisEnergy(int value) {
+	m_photosynthesis_energy = value;
+}
+
+void Animal::SetKillEnergy(int value) {
+	m_kill_energy = value;
+}
+
+void Animal::SetReproductionEnergy(int value) {
+	m_reproduction_energy = value;
+}
+
+void Animal::SetColorsInMoution(int value) {
+	m_colors_in_moution = value;
+}
+
+void Animal::SetMaxEnergy(int value) {
+	m_max_energy = value;
 }

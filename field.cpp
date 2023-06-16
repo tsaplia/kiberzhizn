@@ -67,7 +67,7 @@ bool Field::IsInside(int x, int y) {
 void Field::Moution() {
 	for (int i = 0; i < m_width; i++) {
 		for (int j = 0; j < m_height; j++) {
-			if (m_animals[i][j] && !m_processed.contains(m_animals[i][j])) {
+			if (m_animals[i][j] != nullptr && !m_processed.contains(m_animals[i][j])) {
 				m_animals[i][j]->Motion();
 			}
 		}

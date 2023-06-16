@@ -28,22 +28,16 @@ void Node::ActivationFunction() { // use to converte m_input to m_output
 	else if (m_input > -0.4) m_output = 0;
 	else m_output = -1;
 	m_input = 0;
-	
-	return;
 }
 
 void Node::AddValueToInput(double value) { // factivate = false, cuz input change and result of activate function can change
 	m_input += value;
 	m_factive_use = false;
-
-	return;
 }
 
 void Node::SetValueToOutput(double value) {
 	m_output = value;
 	m_factive_use = true;
-
-	return;
 }
 
 double Node::GetOutput() { // when we take output, we need calc it and call activate function
@@ -60,7 +54,6 @@ double Node::GetInput() {
 
 void Node::SetWeightMulti(double value) {
 	m_weight_multi = value;
-	return;
 }
 
 double Node::GetWeightMulti() {
@@ -77,8 +70,6 @@ std::vector<double> Node::GetDirectionsValues() {
 void Node::Mutation() { // randon weight of node change to random value from -1 to 1 in double
 	int x = rand() % m_directions.size();
 	m_directions[x].second = Random();
-
-	return;
 }
 
 void Node::Sending() {
@@ -89,8 +80,6 @@ void Node::Sending() {
 	for (auto it : m_directions) {
 		it.first->AddValueToInput(it.second * m_output);
 	}
-
-	return;
 }
 
 double Node::Random() {

@@ -13,22 +13,25 @@ class Interface : public QWidget
 
 private:
     int WEIGHT_MULTI = 5;
+    int TIMER_INTERVAL = 500;
 
     bool m_active_status = 0;
 
     PainterArea* m_painter;
     QPushButton* m_start_or_stop;
-    QSlider* m_slider_weight_multi;
-
+    QLineEdit* m_timer_interval_edit;
+    QComboBox* m_color_combo;
     QVBoxLayout* m_vbox_layout;
 
     void Settings();
     void Connections();
     void Start();
     void Stop();
+    void ChangeTimerInterval();
 
 private slots:
     void StartOrStop();
+    void AnimalColor();
 
 public:
     Interface(PainterArea* painter);

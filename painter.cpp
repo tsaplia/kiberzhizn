@@ -3,11 +3,9 @@
 PainterArea::PainterArea() {
 	m_field = new Field(m_col, m_row);
 	m_timer = new QTimer();
-	m_timer->setInterval(TIMER_INTERVAL);
+	m_timer->setInterval(m_timer_interval);
 	connect(m_timer, SIGNAL(timeout()), this, SLOT(TimerTick()));
-	Start();
 	m_state = States::paused;
-	m_animal_color = AnimalColors::family;
 }
 
 PainterArea::~PainterArea() {
@@ -59,16 +57,27 @@ void  PainterArea::mousePressEvent(QMouseEvent* event) {
 }
 
 void PainterArea::Start() {
+	m_timer->setInterval(m_timer_interval);
 	m_timer->start();
 	m_state = States::working;
 }
 
 void PainterArea::Pause() {
 	m_timer->stop();
-	m_state = States::working;
+	m_state = States::paused;
 }
 
 void PainterArea::TimerTick() {
+	m_timer->stop();
 	m_field->Moution();
 	update();
+	if(m_state == States::working) m_timer->start();
+}
+
+void PainterArea::SetTimerInterval(int value) {
+	m_timer_interval = value;
+}
+
+void PainterArea::SetAnimalColor(AnimalColors color) {
+	m_animal_color = color;
 }
