@@ -50,7 +50,8 @@ std::pair<int, int> Animal::LooksAt() {
 }
 
 bool Animal::CanMove() {
-	return LooksAt() != LOOKS_AT_BORDER;
+	std::pair<int, int> look = LooksAt();
+	return look != LOOKS_AT_BORDER && !m_parent->GetAnimal(look.first, look.second);
 }
 
 void Animal::Move() {
@@ -70,7 +71,7 @@ void Animal::Photosynthesis() {
 
 bool Animal::CanAttack() {
 	std::pair<int, int> look = LooksAt();
-	return look != LOOKS_AT_BORDER && m_parent->GetAnimal(look.first, look.second);
+	return look != LOOKS_AT_BORDER && m_parent->GetAnimal(look.first, look.second) && m_energy <= m_max_energy;
 }
 
 void Animal::Attack() {
@@ -130,7 +131,7 @@ void Animal::Motion() {
 
 std::vector<double> Animal::GetBrainInput() {
 	std::vector<double> input(5, 0);
-	input[0] = std::min(1.0, (double)m_energy / 100);
+	input[0] = std::min(1.0, (double)m_energy / m_max_energy);
 
 	std::pair<int, int> look = LooksAt();
 	if (!m_parent->IsInside(look.first, look.second)) {
@@ -140,15 +141,13 @@ std::vector<double> Animal::GetBrainInput() {
 		input[1] = 1;
 
 		QColor color =  m_parent->GetAnimal(look.first, look.second)->m_color;
-		int int_color = (color.red() << 16) | (color.green() << 8) | color.blue();
-		input[2] = (double)int_color / (1 << 24);
+		input[2] = m_color.lightness() == color.lightness() ? 1 - (m_color.hslHue() + 360 - color.hslHue()) % 360 / (double)360 : -1;
 	}
 	else {
 		input[1] = -1;
 	}
 
 	input[3] = (double)m_y / m_parent->Height();
-	input[4] = 0;
 
 	return input;
 }
@@ -168,8 +167,8 @@ QColor Animal::GetFamilyColor() {
 	return this->m_color;
 }
 
-int Animal::GetEnergy() {
-	return this->m_energy;
+QColor Animal::GetEnergyColor() {
+	return QColor::fromHsl(260, 255, 255 - std::min(m_energy,m_max_energy) * 255 / Animal::m_max_energy);
 }
 
 Animal::~Animal() {

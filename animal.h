@@ -17,7 +17,7 @@ public:
     void Motion();
     QColor GetLifeColor();
     QColor GetFamilyColor();
-    int GetEnergy();
+    QColor GetEnergyColor();
 
     static void SetDefaultEnergy(int value);
     static void SetPhotosynthesisEnergy(int value);
@@ -50,11 +50,10 @@ private:
     int m_attacks_cnt;
     int m_synthesis_cnt;
 
-    inline static int m_default_energy = 10;
-    inline static int m_photosynthesis_energy = 8;
-    inline static int m_kill_energy = 8;
-    inline static int m_reproduction_energy = 10;
-    inline static int m_colors_in_moution = 10;
-    inline static int m_max_energy = 10;
-
+    inline static int m_default_energy = 4;
+    inline static int m_photosynthesis_energy = 3;
+    inline static int m_kill_energy = 4;
+    inline static int m_reproduction_energy = 4;
+    inline static int m_colors_in_moution = 2;
+    inline static int m_max_energy = 30;
 };

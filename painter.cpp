@@ -34,7 +34,8 @@ void PainterArea::paintEvent(QPaintEvent* event) {
 			if (!animal) continue;
 
 			if(m_animal_color == AnimalColors::family) painter.setBrush(animal->GetFamilyColor());
-			else painter.setBrush(animal->GetLifeColor());
+			else if (m_animal_color == AnimalColors::life) painter.setBrush(animal->GetLifeColor());
+			else painter.setBrush(animal->GetEnergyColor());
 
 			painter.drawRect(x * m_ceil_width, y * m_ceil_height, m_ceil_width, m_ceil_height);
 		}
@@ -75,9 +76,13 @@ void PainterArea::TimerTick() {
 }
 
 void PainterArea::SetTimerInterval(int value) {
-	m_timer_interval = value;
+	if (m_state == States::paused) {
+		m_timer_interval = value;
+		m_timer->setInterval(value);
+	}
 }
 
 void PainterArea::SetAnimalColor(AnimalColors color) {
 	m_animal_color = color;
+	update();
 }

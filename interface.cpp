@@ -73,6 +73,6 @@ void Interface::AnimalColor() {
 	QString s = m_color_combo->currentText();
 	if (s == "Family") animal_color = AnimalColors::family;
 	else if (s == "Life") animal_color = AnimalColors::life;
-	else if (s == "Energy") animal_color = AnimalColors::life;
-	PainterArea::SetAnimalColor(animal_color);
+	else if (s == "Energy") animal_color = AnimalColors::energy;
+	m_painter->SetAnimalColor(animal_color);
 }
