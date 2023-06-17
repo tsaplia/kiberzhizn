@@ -8,8 +8,8 @@ const std::pair<int, int> LOOKS_AT_BORDER = std::make_pair(-1,-1);
 Animal::Animal(int x, int y, Field* parent) {
 	InitEmpty(x, y, parent);
 
-	srand(time(NULL));
-	m_color = QColor::fromHsl(rand() % 360, 255, rand()%156);
+	//srand(time(NULL));
+	m_color = QColor::fromHsl(rand() % 360, 255, 30+rand()%156);
 	m_brain = new NetworkOfNodes();
 }
 
@@ -26,7 +26,7 @@ void Animal::InitEmpty(int x, int y, Field* parent) {
 	m_parent = parent;
 	m_direction = AnimalDirections(rand()%4);
 	m_energy = m_default_energy;
-	m_attacks_cnt = m_synthesis_cnt = 0;
+	m_attacks_cnt = m_synthesis_cnt = m_age = 0;
 }
 
 std::pair<int, int> Animal::LooksAt() {
@@ -50,7 +50,8 @@ std::pair<int, int> Animal::LooksAt() {
 }
 
 bool Animal::CanMove() {
-	return LooksAt() != LOOKS_AT_BORDER;
+	std::pair<int, int> look = LooksAt();
+	return look != LOOKS_AT_BORDER && !m_parent->GetAnimal(look.first, look.second);
 }
 
 void Animal::Move() {
@@ -70,7 +71,7 @@ void Animal::Photosynthesis() {
 
 bool Animal::CanAttack() {
 	std::pair<int, int> look = LooksAt();
-	return look != LOOKS_AT_BORDER && m_parent->GetAnimal(look.first, look.second);
+	return look != LOOKS_AT_BORDER && m_parent->GetAnimal(look.first, look.second) && m_energy <= m_max_energy;
 }
 
 void Animal::Attack() {
@@ -123,6 +124,7 @@ void Animal::Motion() {
 	if (output[4] > 0.4) m_direction = AnimalDirections((m_direction + 1) % 4);
 	else if (output[4] < -0.4) m_direction = AnimalDirections((4 + m_direction - 1) % 4);
 	m_energy--;
+	m_age++;
 	if (m_energy == 0) {
 		m_parent->KillAnimal(m_x, m_y);
 	}
@@ -130,7 +132,7 @@ void Animal::Motion() {
 
 std::vector<double> Animal::GetBrainInput() {
 	std::vector<double> input(5, 0);
-	input[0] = std::min(1.0, (double)m_energy / 100);
+	input[0] = std::min(1.0, (double)m_energy / m_max_energy);
 
 	std::pair<int, int> look = LooksAt();
 	if (!m_parent->IsInside(look.first, look.second)) {
@@ -140,26 +142,24 @@ std::vector<double> Animal::GetBrainInput() {
 		input[1] = 1;
 
 		QColor color =  m_parent->GetAnimal(look.first, look.second)->m_color;
-		int int_color = (color.red() << 16) | (color.green() << 8) | color.blue();
-		input[2] = (double)int_color / (1 << 24);
+		input[2] = m_color.lightness() == color.lightness() ? 1 - std::abs(m_color.hslHue() - color.hslHue()) / (double)360 : -1;
 	}
 	else {
 		input[1] = -1;
 	}
 
 	input[3] = (double)m_y / m_parent->Height();
-	input[4] = 0;
 
 	return input;
 }
 
 QColor Animal::GetLifeColor() {
 	QColor color = QColor(255,255,0);
-	if (m_synthesis_cnt > m_attacks_cnt) {
-		color.setRed(std::max(0, 255 - m_colors_in_moution * (m_synthesis_cnt - m_attacks_cnt)));
+	if (m_synthesis_cnt/2 > m_attacks_cnt) {
+		color.setRed(std::max(0, 255 - m_colors_in_moution * (m_synthesis_cnt/2 - m_attacks_cnt)));
 	}
 	else {
-		color.setGreen(std::max(0, 255 - m_colors_in_moution * (m_attacks_cnt -m_synthesis_cnt)));
+		color.setGreen(std::max(0, 255 - m_colors_in_moution * (m_attacks_cnt -m_synthesis_cnt/2)));
 	}
 	return color;
 }
@@ -168,8 +168,12 @@ QColor Animal::GetFamilyColor() {
 	return this->m_color;
 }
 
-int Animal::GetEnergy() {
-	return this->m_energy;
+QColor Animal::GetEnergyColor() {
+	return QColor::fromHsl(260, 255, 255 - std::min(m_energy,m_max_energy) * 255 / Animal::m_max_energy);
+}
+
+QColor Animal::GetAgeColor(){
+	return QColor::fromHsl(33, 255, 255 - std::min(m_age, 255));
 }
 
 Animal::~Animal() {
@@ -180,8 +184,11 @@ Animal* Animal::Mutation(Animal* animal) {
 	NetworkOfNodes* brain = new NetworkOfNodes(animal->m_brain); 
 	QColor color = animal->m_color;
 
-	int mutations_cnt = animal->m_brain->Mutations();
-	color.setHsl((color.hue() + mutations_cnt) % 360, color.saturation(), color.lightness());
+	//srand(time(NULL));
+	if (rand() % m_mutation_probabilyty == 0) {
+		int mutations_cnt = animal->m_brain->Mutations();
+		color.setHsl((color.hue() + mutations_cnt) % 360, color.saturation(), color.lightness());
+	}
 
 	std::pair<int, int> pos = animal->LooksAt();
 	return new Animal(pos.first, pos.second, animal->m_parent, brain, color);

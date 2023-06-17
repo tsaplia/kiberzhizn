@@ -7,13 +7,9 @@
 #include "field.h"
 #include "painter.h"
 
-const int ROWS = 60;
-const int COLUMNS = 60;
-const int TIMER_INTERVAL = 500;
 
-
-enum class States {paused, working};
-enum class AnimalColors {life, family};
+enum class States {paused, working, start, file};
+enum class AnimalColors {life, family, energy, age};
 
 class PainterArea : public QWidget
 {
@@ -25,8 +21,8 @@ public:
     const QColor water_color = QColor(100, 230, 255);
     const QColor earth_color = QColor(200, 180, 130);
 
-    static void SetTimerInterval(int value);
-    static void SetAnimalColor(AnimalColors color);
+    void SetTimerInterval(int value);
+    void SetAnimalColor(AnimalColors color);
 
 public slots:
     void Pause();
@@ -41,14 +37,14 @@ protected:
 private:
     Field* m_field;
     QTimer* m_timer;
-    inline static int m_row = 60;
-    inline static int m_col = 60;
-    inline static int m_timer_interval = 500;
+    int m_row = 90;
+    int m_col = 120;
+    int m_timer_interval = 500;
+    int m_moution_update = 1;
     int m_width;
     int m_height;
     double m_ceil_width;
     double m_ceil_height;
     States m_state;
-    inline static AnimalColors m_animal_color = AnimalColors::family;
-
+    AnimalColors m_animal_color = AnimalColors::family;
 };

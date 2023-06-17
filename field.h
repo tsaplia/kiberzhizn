@@ -18,8 +18,11 @@ public:
     void KillAnimal(Animal* animal);
     void UpdatePosition(Animal* animal, int x, int y);
     SurfaceTypes GetSurface(int x, int y);
+    int GetWaterLavel();
     bool IsInside(int x, int y);
     void Moution();
+    void RandGen(int mod);
+    void Clear();
 
 private:
     int m_water_level;

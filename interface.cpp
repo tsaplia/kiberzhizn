@@ -20,6 +20,7 @@ void Interface::Settings() {
 	m_color_combo->addItem("Family");
 	m_color_combo->addItem("Life");
 	m_color_combo->addItem("Energy");
+	m_color_combo->addItem("Age");
 
 	m_vbox_layout->addWidget(m_start_or_stop);
 	m_vbox_layout->addWidget(m_timer_interval_edit);
@@ -74,6 +75,7 @@ void Interface::AnimalColor() {
 	QString s = m_color_combo->currentText();
 	if (s == "Family") animal_color = AnimalColors::family;
 	else if (s == "Life") animal_color = AnimalColors::life;
-	else if (s == "Energy") animal_color = AnimalColors::life;
-	PainterArea::SetAnimalColor(animal_color);
+	else if (s == "Energy") animal_color = AnimalColors::energy;
+	else animal_color = AnimalColors::age;
+	m_painter->SetAnimalColor(animal_color);
 }
