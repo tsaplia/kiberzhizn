@@ -31,6 +31,7 @@ void Interface::Settings() {
 	setMaximumWidth(100);
 
 	Node::SetWeightMulti(WEIGHT_MULTI);
+	PainterArea::SetTimerInterval(TIMER_INTERVAL);
 
 
 	return;
