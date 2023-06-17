@@ -60,6 +60,11 @@ SurfaceTypes Field::GetSurface(int x, int y) {
 	return (y >= m_water_level ? SurfaceTypes::water : SurfaceTypes::earth);
 }
 
+
+int Field::GetWaterLavel() {
+	return this->m_water_level;
+}
+
 bool Field::IsInside(int x, int y) {
 	return x >= 0 && x < m_width && y >= 0 && y < m_height;
 }
@@ -74,6 +79,27 @@ void Field::Moution() {
 	}
 
 	m_processed.clear();
+}
+
+void Field::Clear() {
+	for (int i = 0; i < m_width; i++) {
+		for (int j = 0; j < m_height; j++) {
+			if (m_animals[i][j]) KillAnimal(i, j);
+		}
+	}
+}
+
+void Field::RandGen(int mod) {
+	srand(time(NULL));
+	for (int i = 0; i < m_width; i++) {
+		for (int j = 0; j < m_height; j++) {
+			if (m_animals[i][j]) continue;
+			int t = rand() % mod;
+			if (rand() % mod == 0) {
+				AddAnimal(i, j);
+			}
+		}
+	}
 }
 
 Field::~Field() {

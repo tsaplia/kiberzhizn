@@ -2,10 +2,12 @@
 
 PainterArea::PainterArea() {
 	m_field = new Field(m_col, m_row);
+	m_field->RandGen(10);
 	m_timer = new QTimer();
 	m_timer->setInterval(m_timer_interval);
 	connect(m_timer, &QTimer::timeout, this, &PainterArea::TimerTick);
 	m_state = States::paused;
+	update();
 }
 
 PainterArea::~PainterArea() {
@@ -15,20 +17,13 @@ PainterArea::~PainterArea() {
 void PainterArea::paintEvent(QPaintEvent* event) {
 	QPainter painter(this);
 	QPen pen = QPen(Qt::white);
-	//pen.setWidth(2);
+	pen.setWidth(1);
 	painter.setPen(pen);
 
-	for (int x = 0; x < m_col; x++) {
-		for (int y = 0; y < m_row; y++) {
-			if (m_field->GetSurface(x, y) == SurfaceTypes::water) {
-				painter.setBrush(water_color);
-			}
-			else {
-				painter.setBrush(earth_color);
-			}
-			painter.drawRect(x * m_ceil_width, y * m_ceil_height, m_ceil_width, m_ceil_height);
-		}
-	}
+	painter.setBrush(earth_color);
+	painter.drawRect(0, 0, m_width, m_field->GetWaterLavel() * m_ceil_height);
+	painter.setBrush(water_color);
+	painter.drawRect(0, (int)(m_row * 0.75) * m_ceil_height, m_width, m_height - m_field->GetWaterLavel() * m_ceil_height);
 
 	for (int x = 0; x < m_col; x++) {
 		for (int y = 0; y < m_row; y++) {
@@ -37,7 +32,8 @@ void PainterArea::paintEvent(QPaintEvent* event) {
 
 			if(m_animal_color == AnimalColors::family) painter.setBrush(animal->GetFamilyColor());
 			else if (m_animal_color == AnimalColors::life) painter.setBrush(animal->GetLifeColor());
-			else painter.setBrush(animal->GetEnergyColor());
+			else if (m_animal_color == AnimalColors::energy) painter.setBrush(animal->GetEnergyColor());
+			else painter.setBrush(animal->GetAgeColor());
 
 			painter.drawRect(x * m_ceil_width, y * m_ceil_height, m_ceil_width, m_ceil_height);
 		}
@@ -73,7 +69,9 @@ void PainterArea::Pause() {
 
 void PainterArea::TimerTick() {
 	m_timer->stop();
-	m_field->Moution();
+	for (int i = 0; i < m_moution_update; i++) {
+		m_field->Moution();
+	}
 	update();
 	if(m_state == States::working) m_timer->start();
 }

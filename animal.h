@@ -18,6 +18,7 @@ public:
     QColor GetLifeColor();
     QColor GetFamilyColor();
     QColor GetEnergyColor();
+    QColor GetAgeColor();
 
     static void SetDefaultEnergy(int value);
     static void SetPhotosynthesisEnergy(int value);
@@ -43,6 +44,7 @@ private:
     int m_x;
     int m_y;
     int m_energy;
+    int m_age;
     QColor m_color;
     Field* m_parent;
     NetworkOfNodes* m_brain;
@@ -51,9 +53,10 @@ private:
     int m_synthesis_cnt;
 
     inline static int m_default_energy = 4;
-    inline static int m_photosynthesis_energy = 3;
-    inline static int m_kill_energy = 4;
-    inline static int m_reproduction_energy = 4;
-    inline static int m_colors_in_moution = 2;
-    inline static int m_max_energy = 30;
+    inline static int m_photosynthesis_energy = 4;
+    inline static int m_kill_energy = 10;
+    inline static int m_reproduction_energy = 10;
+    inline static int m_colors_in_moution = 10;
+    inline static int m_max_energy = 60;
+    inline static int m_mutation_probabilyty = 5;
 };

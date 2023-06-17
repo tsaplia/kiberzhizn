@@ -7,5 +7,6 @@ int main(int argc, char *argv[])
     CyberLife w;
     w.resize(600, 400);
     w.show();
+    srand(time(NULL));
     return a.exec();
 }

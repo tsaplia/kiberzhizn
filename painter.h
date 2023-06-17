@@ -9,7 +9,7 @@
 
 
 enum class States {paused, working, start, file};
-enum class AnimalColors {life, family, energy};
+enum class AnimalColors {life, family, energy, age};
 
 class PainterArea : public QWidget
 {
@@ -37,9 +37,10 @@ protected:
 private:
     Field* m_field;
     QTimer* m_timer;
-    int m_row = 60;
-    int m_col = 80;
+    int m_row = 90;
+    int m_col = 120;
     int m_timer_interval = 500;
+    int m_moution_update = 1;
     int m_width;
     int m_height;
     double m_ceil_width;
