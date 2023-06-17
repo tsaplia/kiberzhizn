@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animal.cpp" />
+    <ClCompile Include="config.cpp" />
     <ClCompile Include="cyber_life.cpp" />
     <ClCompile Include="field.cpp" />
     <ClCompile Include="interface.cpp" />
@@ -25,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animal.h" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="field.h" />
     <QtMoc Include="interface.h" />
     <ClInclude Include="network_of_nodes.h" />

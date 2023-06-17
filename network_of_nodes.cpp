@@ -1,8 +1,6 @@
 #include "network_of_nodes.h"
 
 NetworkOfNodes::NetworkOfNodes() { // create network
-	srand(time(NULL));
-
 	m_network.resize(m_size_of_network.size());
 	for (int i = m_size_of_network.size() - 1; i >= 0; i--) {
 		for (int j = 0; j < m_size_of_network[i]; j++) {
@@ -18,8 +16,6 @@ NetworkOfNodes::NetworkOfNodes() { // create network
 }
 
 NetworkOfNodes::NetworkOfNodes(NetworkOfNodes* net) {
-	srand(time(NULL));
-
 	m_network.resize(m_size_of_network.size());
 	for (int i = m_size_of_network.size() - 1; i >= 0; i--) {
 		for (int j = 0; j < m_size_of_network[i]; j++) {

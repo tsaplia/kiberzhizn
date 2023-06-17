@@ -25,7 +25,7 @@ void Animal::InitEmpty(int x, int y, Field* parent) {
 	m_y = y;
 	m_parent = parent;
 	m_direction = AnimalDirections(rand()%4);
-	m_energy = m_default_energy;
+	m_energy = Config::GetDefaultEnergy();
 	m_attacks_cnt = m_synthesis_cnt = m_age = 0;
 }
 
@@ -61,36 +61,36 @@ void Animal::Move() {
 }
 
 bool Animal::CanSynthesize() {
-	return m_parent->GetSurface(m_x, m_y) == SurfaceTypes::earth && m_energy <= m_max_energy;
+	return m_parent->GetSurface(m_x, m_y) == SurfaceTypes::earth && m_energy <= Config::GetMaxEnergy();
 }
 
 void Animal::Photosynthesis() {
-	m_energy += m_photosynthesis_energy;
+	m_energy += Config::GetPhotosynthesisEnergy();
 	m_synthesis_cnt++;
 }
 
 bool Animal::CanAttack() {
 	std::pair<int, int> look = LooksAt();
-	return look != LOOKS_AT_BORDER && m_parent->GetAnimal(look.first, look.second) && m_energy <= m_max_energy;
+	return look != LOOKS_AT_BORDER && m_parent->GetAnimal(look.first, look.second) && m_energy <= Config::GetMaxEnergy();
 }
 
 void Animal::Attack() {
 	std::pair<int, int> look = LooksAt();
 	m_parent->KillAnimal(look.first, look.second);
-	m_energy += m_kill_energy;
+	m_energy += Config::GetKillEnergy();
 	m_attacks_cnt++;
 }
 
 bool Animal::CanReproduce() {
 	std::pair<int, int> look = LooksAt();
 	return look != LOOKS_AT_BORDER && !m_parent->GetAnimal(look.first, look.second) && 
-		m_energy > m_reproduction_energy;
+		m_energy > Config::GetReproductionEnergy();
 }
 
 void Animal::Reproduction() {
 	std::pair<int, int> look = LooksAt();
 	m_parent->AddAnimal(look.first, look.second, Animal::Mutation(this));
-	m_energy -= m_reproduction_energy;
+	m_energy -= Config::GetReproductionEnergy();
 }
 
 void Animal::Motion() {
@@ -132,7 +132,7 @@ void Animal::Motion() {
 
 std::vector<double> Animal::GetBrainInput() {
 	std::vector<double> input(5, 0);
-	input[0] = std::min(1.0, (double)m_energy / m_max_energy);
+	input[0] = std::min(1.0, (double)m_energy / Config::GetMaxEnergy());
 
 	std::pair<int, int> look = LooksAt();
 	if (!m_parent->IsInside(look.first, look.second)) {
@@ -169,7 +169,7 @@ QColor Animal::GetFamilyColor() {
 }
 
 QColor Animal::GetEnergyColor() {
-	return QColor::fromHsl(260, 255, 255 - std::min(m_energy,m_max_energy) * 255 / Animal::m_max_energy);
+	return QColor::fromHsl(260, 255, 255 - std::min(m_energy,Config::GetMaxEnergy()) * 255 / Config::GetMaxEnergy());
 }
 
 QColor Animal::GetAgeColor(){
@@ -194,26 +194,6 @@ Animal* Animal::Mutation(Animal* animal) {
 	return new Animal(pos.first, pos.second, animal->m_parent, brain, color);
 }
 
-void Animal::SetDefaultEnergy(int value) {
-	m_default_energy = value;
-}
-
-void Animal::SetPhotosynthesisEnergy(int value) {
-	m_photosynthesis_energy = value;
-}
-
-void Animal::SetKillEnergy(int value) {
-	m_kill_energy = value;
-}
-
-void Animal::SetReproductionEnergy(int value) {
-	m_reproduction_energy = value;
-}
-
 void Animal::SetColorsInMoution(int value) {
 	m_colors_in_moution = value;
-}
-
-void Animal::SetMaxEnergy(int value) {
-	m_max_energy = value;
 }

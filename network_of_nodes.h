@@ -8,7 +8,7 @@ class NetworkOfNodes {
 
 private:
 	std::vector<std::vector<Node*>> m_network;
-	std::vector<int> m_size_of_network = { 5, 5, 5, 5 }; // test, can change
+	std::vector<int> m_size_of_network = { 5, 8, 6, 5 }; // test, can change
 
 public:
 	NetworkOfNodes();

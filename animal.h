@@ -3,6 +3,7 @@
 #include <QtCore>
 #include <QColor>
 #include "network_of_nodes.h"
+#include "config.h"
 
 class Field; 
 
@@ -20,12 +21,7 @@ public:
     QColor GetEnergyColor();
     QColor GetAgeColor();
 
-    static void SetDefaultEnergy(int value);
-    static void SetPhotosynthesisEnergy(int value);
-    static void SetKillEnergy(int value);
-    static void SetReproductionEnergy(int value);
     static void SetColorsInMoution(int value);
-    static void SetMaxEnergy(int value);
 
 private:
     void InitEmpty(int x, int y, Field* parent);
@@ -52,11 +48,6 @@ private:
     int m_attacks_cnt;
     int m_synthesis_cnt;
 
-    inline static int m_default_energy = 4;
-    inline static int m_photosynthesis_energy = 4;
-    inline static int m_kill_energy = 10;
-    inline static int m_reproduction_energy = 10;
     inline static int m_colors_in_moution = 10;
-    inline static int m_max_energy = 60;
     inline static int m_mutation_probabilyty = 5;
 };

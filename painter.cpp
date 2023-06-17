@@ -87,3 +87,8 @@ void PainterArea::SetAnimalColor(AnimalColors color) {
 	m_animal_color = color;
 	update();
 }
+
+void PainterArea::Clear() {
+	m_field->Clear();
+	update();
+}

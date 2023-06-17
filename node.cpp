@@ -1,7 +1,6 @@
 #include "node.h"
 
 Node::Node(std::vector<Node*> directions) {
-	srand(time(NULL));
 	m_directions.resize(directions.size());
 	for (int i = 0; i < directions.size(); i++) {
 		m_directions[i].first = directions[i];
@@ -10,7 +9,6 @@ Node::Node(std::vector<Node*> directions) {
 }
 
 Node::Node(std::vector<Node*> directions, std::vector<double> values) {
-	srand(time(NULL));
 	m_directions.resize(directions.size());
 	for (int i = 0; i < directions.size(); i++) {
 		m_directions[i].first = directions[i];
