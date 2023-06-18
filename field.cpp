@@ -3,7 +3,7 @@
 Field::Field(int width, int height) {
 	m_height = height;
 	m_width = width;
-	m_water_level = static_cast<int>(height * 0.75);
+	m_water_level = static_cast<int>(height * WATER_LAVEL);
 	m_animals.resize(width, std::vector<Animal*>(height));
 }
 
@@ -24,6 +24,8 @@ void Field::AddAnimal(int x, int y) {
 void Field::AddAnimal(int x, int y, Animal* animal) {
 	if (!IsInside(x, y)) return;
 	if (this->GetAnimal(x, y)) this->KillAnimal(x, y);
+
+	m_animals_cnt++;
 	m_animals[x][y] = animal;
 	m_animal_list[m_animals[x][y]] = { x,y };
 	m_processed.insert(animal);
@@ -36,6 +38,7 @@ Animal* Field::GetAnimal(int x, int y) {
 void Field::KillAnimal(int x, int y) {
 	if(!IsInside(x, y) || !m_animals[x][y]) return;
 
+	m_animals_cnt--;
 	m_animal_list.erase(m_animals[x][y]);
 	delete m_animals[x][y];
 	m_animals[x][y] = nullptr;
@@ -60,6 +63,9 @@ SurfaceTypes Field::GetSurface(int x, int y) {
 	return (y >= m_water_level ? SurfaceTypes::water : SurfaceTypes::earth);
 }
 
+int Field::GetAnimalsCnt() {
+	return m_animals_cnt;
+}
 
 int Field::GetWaterLavel() {
 	return this->m_water_level;
