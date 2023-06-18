@@ -2,7 +2,6 @@
 
 PainterArea::PainterArea() {
 	m_field = new Field(m_col, m_row);
-	m_field->RandGen(100);
 	m_timer = new QTimer();
 	m_timer->setInterval(m_timer_interval);
 	connect(m_timer, &QTimer::timeout, this, &PainterArea::TimerTick);
@@ -120,5 +119,10 @@ void PainterArea::SetAnimalColor(AnimalColors color) {
 
 void PainterArea::Clear() {
 	m_field->Clear();
+	update();
+}
+
+void PainterArea::Spawn() {
+	m_field->RandGen(100);
 	update();
 }

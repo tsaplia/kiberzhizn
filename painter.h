@@ -24,6 +24,7 @@ public:
     void SetTimerInterval(int value);
     void SetAnimalColor(AnimalColors color);
     void Clear();
+    void Spawn();
 
 public slots:
     void Pause();

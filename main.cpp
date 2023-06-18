@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     srand(time(NULL));
     CyberLife w;
-    w.resize(600, 400);
+    w.resize(900, 500);
     w.show();
     return a.exec();
 }
