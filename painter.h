@@ -33,18 +33,23 @@ protected:
     void paintEvent(QPaintEvent* event) override;
     void resizeEvent(QResizeEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
+    void mouseMoveEvent(QMouseEvent* event) override;
+    void mouseReleaseEvent(QMouseEvent* event) override;
 
 private:
     Field* m_field;
     QTimer* m_timer;
-    int m_row = 90;
-    int m_col = 120;
-    int m_timer_interval = 500;
-    int m_moution_update = 1;
+    int m_row = 120;
+    int m_col = 160;
     int m_width;
     int m_height;
     double m_ceil_width;
     double m_ceil_height;
     States m_state;
     AnimalColors m_animal_color = AnimalColors::family;
+    int m_clear_area_radius = 5;
+    int m_timer_interval = 500;
+
+    bool m_right_button_pressed = false;
+    void ClearArea(int x, int y, int r);
 };

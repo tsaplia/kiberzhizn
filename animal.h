@@ -12,7 +12,7 @@ class Animal
 {
 public:
     Animal(int x, int y, Field* parent);
-    Animal(int x, int y, Field* parent, NetworkOfNodes* brain, QColor color);
+    Animal(int x, int y, Field* parent, NetworkOfNodes* brain, QColor color, AnimalDirections direction);
     ~Animal();
     void Motion();
     QColor GetLifeColor();
@@ -59,4 +59,5 @@ private:
     inline static int m_colors_in_moution = 10;
     inline static int m_max_energy = 60;
     inline static int m_mutation_probabilyty = 5;
+    inline static int m_max_age = 300;
 };
