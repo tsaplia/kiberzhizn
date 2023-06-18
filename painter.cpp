@@ -85,7 +85,6 @@ void PainterArea::ClearArea(int x, int y, int r) {
 	}
 }
 
-
 void PainterArea::Start() {
 	m_timer->start();
 	m_state = States::working;
@@ -106,6 +105,19 @@ void PainterArea::TimerTick() {
 	update();
 
 	if (m_state == States::working) m_timer->start();
+}
+
+void PainterArea::SkipMoution(int steps){
+	if (m_state == States::working) Pause();
+	if (m_state != States::paused && m_state == States::start) return;
+
+	while (steps--) {
+		m_field->Moution();
+		if (Config::GetMigration() && rand() % Config::GetMigrationProb() == 0) {
+			m_field->RandGen(Config::ROWS * Config::COLS - m_field->GetAnimalsCnt());
+		}
+	}
+	update();
 }
 
 void PainterArea::SetTimerInterval(int value) {

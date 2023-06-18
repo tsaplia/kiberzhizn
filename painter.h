@@ -27,6 +27,7 @@ public:
     void Pause();
     void Start();
     void TimerTick();
+    void SkipMoution(int steps);
 
 protected:
     void paintEvent(QPaintEvent* event) override;
