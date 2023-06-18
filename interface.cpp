@@ -105,7 +105,6 @@ void Interface::Settings() {
 	setLayout(m_vbox_layout);
 	setMaximumWidth(250);
 
-	Node::SetWeightMulti(WEIGHT_MULTI);
 	m_painter->SetTimerInterval(TIMER_INTERVAL);
 }
 

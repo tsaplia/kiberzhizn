@@ -4,8 +4,6 @@
 
 enum class SurfaceTypes { water, earth };
 
-const double WATER_LAVEL = 0.85;
-
 class Field
 {
 public:
@@ -28,7 +26,7 @@ public:
     void Clear();
 
 private:
-    int m_animals_cnt=0;
+    int m_animals_cnt = 0;
     int m_water_level;
     int m_width;
     int m_height;

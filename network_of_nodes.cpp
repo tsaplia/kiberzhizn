@@ -65,8 +65,7 @@ std::vector<double> NetworkOfNodes::Calculations(std::vector<double> values) { /
 }
 
 int NetworkOfNodes::Mutations() {
-	int max_mutations = 6;
-	int amount = rand() % max_mutations + 1;
+	int amount = rand() % Config::MAX_MUTATIONS + 1;
 	for (int q = 0; q < amount; q++) {
 		int i_am = rand() % (m_size_of_network.size()-1);
 		int j_am = rand() % m_size_of_network[i_am];

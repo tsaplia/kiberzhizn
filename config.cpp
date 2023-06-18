@@ -39,3 +39,51 @@ void Config::SetMaxEnergy(int value) {
 int Config::GetMaxEnergy() {
 	return m_max_energy;
 }
+
+void Config::SetEracerRadius(int value) {
+	m_eracer_radius = value;
+}
+
+int Config::GetEracerRadius() {
+	return m_eracer_radius;
+}
+
+void Config::SetRandomProb(int value) {
+	m_random_prob = value;
+}
+
+int Config::GetRandomProb() {
+	return m_random_prob;
+}
+
+void Config::SetDeathProb(int value) {
+	m_death_prob = value;
+}
+
+int Config::GetDeathProb() {
+	return m_death_prob;
+}
+
+void Config::SetMigrationProb(int value) {
+	m_migration_prob = value;
+}
+
+int Config::GetMigrationProb() {
+	return m_migration_prob;
+}
+
+void Config::SetMigration(bool value) {
+	m_migration = value;
+}
+
+bool Config::GetMigration() {
+	return m_migration;
+}
+
+void Config::SetDeath(bool value) {
+	m_death = value;
+}
+
+bool Config::GetDeath() {
+	return m_death;
+}

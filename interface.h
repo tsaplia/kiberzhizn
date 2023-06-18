@@ -64,10 +64,6 @@ private:
     void Stop();
     void GroupValuesHide();
     void GroupValuesShow();
-    void GroupFeaturesHide();
-    void GroupFeaturesShow();
-    void MigrationHide();
-
 
 private slots:
     void StartOrStop();
@@ -81,13 +77,6 @@ private slots:
     void ChangeKillEnergy();
     void ChangeReproductionEnergy();
     void ChangeMaxEnergy();
-    void GroupFeaturesVisible();
-    void MigrationVisible();
-    void ChangeMigrationRate();
-    void ChangeMigrationProb();
-    void DeathVisible();
-    void ChangeDeathProb();
-    void ChangeEraseRadius();
 
 public:
     Interface(PainterArea* painter);

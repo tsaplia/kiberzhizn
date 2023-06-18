@@ -5,7 +5,6 @@
 #include <QtGui>
 
 #include "field.h"
-#include "painter.h"
 
 
 enum class States {paused, working, start, file};
@@ -25,8 +24,6 @@ public:
     void SetAnimalColor(AnimalColors color);
     void Clear();
     void Spawn();
-
-public slots:
     void Pause();
     void Start();
     void TimerTick();
@@ -41,17 +38,12 @@ protected:
 private:
     Field* m_field;
     QTimer* m_timer;
-    int m_row = 120;
-    int m_col = 160;
     int m_width;
     int m_height;
     double m_ceil_width;
     double m_ceil_height;
     States m_state;
     AnimalColors m_animal_color = AnimalColors::family;
-    int m_clear_area_radius = 5;
-    int m_timer_interval = 500;
-
     bool m_right_button_pressed = false;
     void ClearArea(int x, int y, int r);
 };

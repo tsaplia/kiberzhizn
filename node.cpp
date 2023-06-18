@@ -50,14 +50,6 @@ double Node::GetInput() {
 	return m_input;
 }
 
-void Node::SetWeightMulti(double value) {
-	m_weight_multi = value;
-}
-
-double Node::GetWeightMulti() {
-	return m_weight_multi;
-}
-
 std::vector<double> Node::GetDirectionsValues() {
 	std::vector<double> values;
 	for (auto it : m_directions)
@@ -83,5 +75,5 @@ void Node::Sending() {
 double Node::Random() {
 	int rand_maxi = 20000;
 	double buf = (rand() % rand_maxi) - rand_maxi / 2;
-	return (buf / ((double)rand_maxi / 2)) * m_weight_multi;
+	return (buf / ((double)rand_maxi / 2)) * Config::WEIGHT_MULTI;
 }

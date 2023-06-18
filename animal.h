@@ -3,7 +3,6 @@
 #include <QtCore>
 #include <QColor>
 #include "network_of_nodes.h"
-#include "config.h"
 
 class Field; 
 
@@ -20,8 +19,6 @@ public:
     QColor GetFamilyColor();
     QColor GetEnergyColor();
     QColor GetAgeColor();
-
-    static void SetColorsInMoution(int value);
 
 private:
     void InitEmpty(int x, int y, Field* parent);
@@ -47,8 +44,4 @@ private:
     AnimalDirections m_direction;
     int m_attacks_cnt;
     int m_synthesis_cnt;
-
-    inline static int m_colors_in_moution = 10;
-    inline static int m_mutation_probabilyty = 5;
-    inline static int m_max_age = 300;
 };

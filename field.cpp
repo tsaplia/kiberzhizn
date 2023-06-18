@@ -3,7 +3,7 @@
 Field::Field(int width, int height) {
 	m_height = height;
 	m_width = width;
-	m_water_level = static_cast<int>(height * WATER_LAVEL);
+	m_water_level = static_cast<int>(height * Config::WATER_LAVEL);
 	m_animals.resize(width, std::vector<Animal*>(height));
 }
 
