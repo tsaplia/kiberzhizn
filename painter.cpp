@@ -145,3 +145,22 @@ void PainterArea::Spawn() {
 		update();
 	}
 }
+
+void PainterArea::SelectAnimal() {
+	if (m_state == States::working) Pause();
+	if (m_state != States::paused) return;
+
+	m_state = States::select_animal;
+	// do something
+}
+
+bool PainterArea::SaveAnimal(std::string filename) {
+	if (m_state != States::select_animal) return false;
+	// do something
+	return true;
+}
+
+bool PainterArea::AnimalFromFile(std::string filename) {
+	// do something
+	return true;
+}

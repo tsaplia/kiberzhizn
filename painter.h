@@ -7,7 +7,7 @@
 #include "field.h"
 
 
-enum class States {paused, working, start, file};
+enum class States {paused, working, start, select_animal};
 enum class AnimalColors {life, family, energy, age};
 
 class PainterArea : public QWidget
@@ -28,6 +28,9 @@ public:
     void Start();
     void TimerTick();
     void SkipMoution(int steps);
+    void SelectAnimal();
+    bool SaveAnimal(std::string filename);
+    bool AnimalFromFile(std::string filename);
 
 protected:
     void paintEvent(QPaintEvent* event) override;

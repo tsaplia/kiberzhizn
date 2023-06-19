@@ -13,7 +13,9 @@ private:
 public:
 	NetworkOfNodes();
 	NetworkOfNodes(NetworkOfNodes* net);
+	NetworkOfNodes(std::ifstream& file);
 	~NetworkOfNodes();
 	std::vector<double> Calculations(std::vector<double> values);
 	int Mutations();
+	bool Save(std::ofstream& file);
 };
