@@ -6,7 +6,7 @@
 
 class Field; 
 
-enum AnimalDirections { left, up, right, down };
+enum class AnimalDirections { left, up, right, down };
 
 class Animal
 {
@@ -19,6 +19,8 @@ public:
     QColor GetFamilyColor();
     QColor GetEnergyColor();
     QColor GetAgeColor();
+    bool Save(std::string filename);
+    static Animal* FromFile(int x, int y, Field* parent, std::string filename);
 
 private:
     void InitEmpty(int x, int y, Field* parent);

@@ -20,6 +20,7 @@
     <ClCompile Include="network_of_nodes.cpp" />
     <ClCompile Include="node.cpp" />
     <ClCompile Include="painter.cpp" />
+    <ClCompile Include="file_actions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="cyber_life.h" />

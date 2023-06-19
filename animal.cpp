@@ -121,8 +121,8 @@ void Animal::Motion() {
 		}
 	}
 
-	if (output[4] > Config::ROTATION_ACTIVATION) m_direction = AnimalDirections((m_direction + 1) % 4);
-	else if (output[4] < -Config::ROTATION_ACTIVATION) m_direction = AnimalDirections((4 + m_direction - 1) % 4);
+	if (output[4] > Config::ROTATION_ACTIVATION) m_direction = AnimalDirections((static_cast<int>(m_direction) + 1) % 4);
+	else if (output[4] < -Config::ROTATION_ACTIVATION) m_direction = AnimalDirections((static_cast<int>(m_direction) + 3) % 4);
 	m_energy--;
 	m_age++;
 	if (m_energy == 0 || (Config::GetDeath() && rand() % (std::max(Config::MAX_AGE - m_age, 1) * Config::GetDeathProb()) == 0)) {
