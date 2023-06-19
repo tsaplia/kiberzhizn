@@ -47,10 +47,12 @@ public:
 
 	const static int MUTATION_PROBABILITY = 5;
 	const static int MAX_MUTATIONS = 6;
-	const static int WEIGHT_MULTI = 3; // you can make it private
+	const static int WEIGHT_MULTI = 3; 
 	static constexpr double ROTATION_ACTIVATION = 5.0;
 
 	const static int ROWS = 120;
 	const static int COLS = 160;
 	const static int DEFAULT_INTERVAL = 500;
+
+	const static int FLASH_INTERVAL = 50;
 };

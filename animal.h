@@ -4,6 +4,8 @@
 #include <QColor>
 #include "network_of_nodes.h"
 
+const std::pair<int, int> NOT_CORD = std::make_pair(-1, -1);
+
 class Field; 
 
 enum class AnimalDirections { left, up, right, down };
@@ -11,6 +13,7 @@ enum class AnimalDirections { left, up, right, down };
 class Animal
 {
 public:
+    Animal(int x, int y, Animal* animal);
     Animal(int x, int y, Field* parent);
     Animal(int x, int y, Field* parent, NetworkOfNodes* brain, QColor color, AnimalDirections direction);
     ~Animal();

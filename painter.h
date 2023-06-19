@@ -49,5 +49,14 @@ private:
     States m_state;
     AnimalColors m_animal_color = AnimalColors::family;
     bool m_right_button_pressed = false;
+    QColor GetAnimalColor(Animal* animal);
     void ClearArea(int x, int y, int r);
+    QMap<std::string, Animal*> m_loaded_animals;
+
+
+    /*Selected point features*/
+    void FlasTick();
+    std::pair<int,int> m_selected_cord;
+    bool m_selectd_visible = false;
+    QTimer* m_flash_timer;
 };

@@ -44,6 +44,7 @@ bool Animal::Save(std::string filename) {
     ok &= writeNumber(static_cast<int>(m_color.rgb()), file);
     ok &= writeNumber(static_cast<int>(m_direction), file);
 
+    file.close();
     return ok;
 }
 
@@ -60,6 +61,7 @@ Animal* Animal::FromFile(int x, int y, Field* parent, std::string filename) {
     int direction;
     if (!readNumber(direction, file)) return nullptr;
 
+    file.close();
     return new Animal(x, y, parent, brain, QColor::fromRgba(color_value), AnimalDirections(direction));
 }
 

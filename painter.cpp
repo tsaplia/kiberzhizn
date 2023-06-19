@@ -7,6 +7,11 @@ PainterArea::PainterArea() {
 	connect(m_timer, &QTimer::timeout, this, &PainterArea::TimerTick);
 	m_state = States::start;
 	update();
+
+	m_selected_cord = NOT_CORD;
+	m_flash_timer = new QTimer();
+	m_flash_timer->setInterval(Config::FLASH_INTERVAL);
+	connect(m_flash_timer, &QTimer::timeout, this, &PainterArea::FlasTick);
 }
 
 PainterArea::~PainterArea() {
@@ -29,14 +34,17 @@ void PainterArea::paintEvent(QPaintEvent* event) {
 			Animal* animal = m_field->GetAnimal(x, y);
 			if (!animal) continue;
 
-			if (m_animal_color == AnimalColors::family) painter.setBrush(animal->GetFamilyColor());
-			else if (m_animal_color == AnimalColors::life) painter.setBrush(animal->GetLifeColor());
-			else if (m_animal_color == AnimalColors::energy) painter.setBrush(animal->GetEnergyColor());
-			else painter.setBrush(animal->GetAgeColor());
-
+			else painter.setBrush(GetAnimalColor(animal));
 			painter.drawRect(x * m_ceil_width, y * m_ceil_height, m_ceil_width, m_ceil_height);
 		}
 	}
+}
+
+QColor PainterArea::GetAnimalColor(Animal* animal) {
+	if (m_animal_color == AnimalColors::family) return animal->GetFamilyColor();
+	if (m_animal_color == AnimalColors::life) return animal->GetLifeColor();
+	if (m_animal_color == AnimalColors::energy) return animal->GetEnergyColor();
+	return animal->GetAgeColor();
 }
 
 void PainterArea::resizeEvent(QResizeEvent* event) {
@@ -50,6 +58,11 @@ void PainterArea::resizeEvent(QResizeEvent* event) {
 void  PainterArea::mousePressEvent(QMouseEvent* event) {
 	int x = event->pos().x() / m_ceil_width;
 	int y = event->pos().y() / m_ceil_height;
+
+	if (m_state == States::select_animal) {
+		m_selected_cord = std::make_pair(x, y);
+		return;
+	}
 
 	if (event->button() == Qt::LeftButton) {
 		if (m_field->GetAnimal(x, y)) m_field->KillAnimal(x, y);
@@ -109,7 +122,7 @@ void PainterArea::TimerTick() {
 
 void PainterArea::SkipMoution(int steps){
 	if (m_state == States::working) Pause();
-	if (m_state != States::paused && m_state == States::start) return;
+	if (m_state != States::paused && m_state != States::start) return;
 
 	while (steps--) {
 		m_field->Moution();
@@ -151,16 +164,41 @@ void PainterArea::SelectAnimal() {
 	if (m_state != States::paused) return;
 
 	m_state = States::select_animal;
-	// do something
+	m_flash_timer->start();
+}
+
+void PainterArea::FlasTick() {
+	if (m_selected_cord == NOT_CORD || !m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second)) return;
+	int x = m_selected_cord.first, y = m_selected_cord.second;
+
+	QPainter painter(this);
+	painter.setPen(Qt::white);
+	if (m_selectd_visible) painter.setBrush(GetAnimalColor(m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second)));
+	else painter.setBrush(Qt::black);
+	painter.drawRect(x * m_ceil_width, y * m_ceil_height, m_ceil_width, m_ceil_height);
+
+	m_selectd_visible = !m_selectd_visible;
+	
 }
 
 bool PainterArea::SaveAnimal(std::string filename) {
-	if (m_state != States::select_animal) return false;
-	// do something
-	return true;
+	if (m_state != States::select_animal || m_selected_cord == NOT_CORD || 
+		!m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second)) return false;
+	m_state = States::paused;
+	m_flash_timer->stop();
+	
+	Animal* animal = m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second);
+	return animal->Save(filename);
 }
 
 bool PainterArea::AnimalFromFile(std::string filename) {
-	// do something
-	return true;
+	Animal* animal;
+	bool ok = Animal::FromFile(0, 0, m_field, filename);
+	if (ok) {
+		std::string animal_name = filename.substr(0, filename.length() - 4);
+		m_loaded_animals[animal_name] = animal;
+	}
+	return ok;
 }
+
+

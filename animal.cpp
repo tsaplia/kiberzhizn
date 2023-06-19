@@ -1,15 +1,19 @@
 #include "animal.h"
 #include "field.h"
 
-
-const std::pair<int, int> LOOKS_AT_BORDER = std::make_pair(-1, -1);
-
-
 Animal::Animal(int x, int y, Field* parent) {
 	InitEmpty(x, y, parent);
 
 	m_color = QColor::fromHsl(rand() % 360, 255, 70 + rand() % 156);
 	m_brain = new NetworkOfNodes();
+}
+
+Animal::Animal(int x, int y, Animal* animal) {
+	InitEmpty(x, y, animal->m_parent);
+
+	m_brain = new NetworkOfNodes(animal->m_brain);
+	m_color = animal->m_color;
+	m_direction = animal->m_direction;
 }
 
 Animal::Animal(int x, int y, Field* parent, NetworkOfNodes* brain, QColor color, AnimalDirections direction) {
@@ -46,12 +50,12 @@ std::pair<int, int> Animal::LooksAt() {
 		y--;
 		break;
 	}
-	return (m_parent->IsInside(x, y) ? std::make_pair(x, y) : LOOKS_AT_BORDER);
+	return (m_parent->IsInside(x, y) ? std::make_pair(x, y) : NOT_CORD);
 }
 
 bool Animal::CanMove() {
 	std::pair<int, int> look = LooksAt();
-	return look != LOOKS_AT_BORDER && !m_parent->GetAnimal(look.first, look.second);
+	return look != NOT_CORD && !m_parent->GetAnimal(look.first, look.second);
 }
 
 void Animal::Move() {
@@ -71,7 +75,7 @@ void Animal::Photosynthesis() {
 
 bool Animal::CanAttack() {
 	std::pair<int, int> look = LooksAt();
-	return look != LOOKS_AT_BORDER && m_parent->GetAnimal(look.first, look.second) && m_energy <= Config::GetMaxEnergy();
+	return look != NOT_CORD && m_parent->GetAnimal(look.first, look.second) && m_energy <= Config::GetMaxEnergy();
 }
 
 void Animal::Attack() {
@@ -83,7 +87,7 @@ void Animal::Attack() {
 
 bool Animal::CanReproduce() {
 	std::pair<int, int> look = LooksAt();
-	return look != LOOKS_AT_BORDER && !m_parent->GetAnimal(look.first, look.second) &&
+	return look != NOT_CORD && !m_parent->GetAnimal(look.first, look.second) &&
 		m_energy > Config::GetReproductionEnergy();
 }
 
