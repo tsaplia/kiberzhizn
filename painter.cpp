@@ -38,6 +38,18 @@ void PainterArea::paintEvent(QPaintEvent* event) {
 			painter.drawRect(x * m_ceil_width, y * m_ceil_height, m_ceil_width, m_ceil_height);
 		}
 	}
+
+	if (m_selected_cord == NOT_CORD || !m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second)) return;
+	int x = m_selected_cord.first, y = m_selected_cord.second;
+
+//	QPainter painter(this);
+	painter.setPen(Qt::white);
+	if (m_selectd_visible) painter.setBrush(GetAnimalColor(m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second)));
+	else painter.setBrush(Qt::black);
+	painter.drawRect(x * m_ceil_width, y * m_ceil_height, m_ceil_width, m_ceil_height);
+
+	m_selectd_visible = !m_selectd_visible;
+
 }
 
 QColor PainterArea::GetAnimalColor(Animal* animal) {
@@ -163,7 +175,7 @@ void PainterArea::Spawn() {
 
 void PainterArea::SelectAnimal() {
 	if (m_state == States::working) Pause();
-	if (m_state != States::paused || m_state != States::start) return;
+	if (m_state != States::paused && m_state != States::start) return;
 
 	m_state = States::select_animal;
 	m_flash_timer->start();
@@ -174,7 +186,7 @@ bool PainterArea::AnimalSelected() {
 }
 
 void PainterArea::FlasTick() {
-	if (m_selected_cord == NOT_CORD || !m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second)) return;
+/*	if (m_selected_cord == NOT_CORD || !m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second)) return;
 	int x = m_selected_cord.first, y = m_selected_cord.second;
 
 	QPainter painter(this);
@@ -183,15 +195,17 @@ void PainterArea::FlasTick() {
 	else painter.setBrush(Qt::black);
 	painter.drawRect(x * m_ceil_width, y * m_ceil_height, m_ceil_width, m_ceil_height);
 
-	m_selectd_visible = !m_selectd_visible;
+	m_selectd_visible = !m_selectd_visible;*/
 	
+	update();
 }
 
 bool PainterArea::SaveAnimal(std::string filename) {
 	if (m_state != States::select_animal || !AnimalSelected()) return false;
 	
 	Animal* animal = m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second);
-	return animal->Save(filename);
+	bool animal_bool = animal->Save(filename);
+	return false;
 }
 
 void PainterArea::RemoveSelection() {

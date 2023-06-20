@@ -30,6 +30,7 @@ private:
     QPushButton* m_spawn;
     QPushButton* m_save_mode;
     QPushButton* m_save;
+    QPushButton* m_open;
 
     QCheckBox* m_migration_check;
     QCheckBox* m_death_check;
@@ -63,6 +64,7 @@ private:
     QLineEdit* m_death_prob_edit;
 
     QComboBox* m_color_combo;
+    QComboBox* m_open_combo;
 
     QGroupBox* m_group_values;
     QGroupBox* m_group_features;
@@ -70,6 +72,7 @@ private:
     QVBoxLayout* m_vbox_layout;
     QHBoxLayout* m_hbox_skip;
     QHBoxLayout* m_hbox_save;
+    QHBoxLayout* m_hbox_open;
     QGridLayout* m_grid_values;
     QGridLayout* m_grid_features;
 
@@ -96,6 +99,8 @@ private slots:
     void AnimalColor();
     void SaveMode();
     void Save();
+    void Open();
+    void AnimalList();
     // 1 - groupbox values
     void GroupValuesVisible();
     void ChangeTimerInterval();

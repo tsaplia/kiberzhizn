@@ -10,6 +10,7 @@ Interface::Interface(PainterArea* painter) {
 	m_spawn = new QPushButton("Spawn");
 	m_save_mode = new QPushButton("Save mode");
 	m_save = new QPushButton("Save");
+	m_open = new QPushButton("Open");
 
 	m_migration_check = new QCheckBox("Migration");
 	m_death_check = new QCheckBox("Death");
@@ -43,6 +44,7 @@ Interface::Interface(PainterArea* painter) {
 	m_death_prob_edit = new QLineEdit(QString::number(Config::GetDeathProb()));
 	
 	m_color_combo = new QComboBox();
+	m_open_combo = new QComboBox();
 	
 	m_group_values = new QGroupBox("Values");
 	m_group_features = new QGroupBox("Features");
@@ -50,6 +52,7 @@ Interface::Interface(PainterArea* painter) {
 	m_vbox_layout = new QVBoxLayout();
 	m_hbox_skip = new QHBoxLayout();
 	m_hbox_save = new QHBoxLayout();
+	m_hbox_open = new QHBoxLayout();
 	m_grid_values = new QGridLayout();
 	m_grid_features = new QGridLayout();
 
@@ -74,15 +77,20 @@ void Interface::Settings() {
 	m_hbox_skip->addWidget(m_skip_label);
 	m_hbox_skip->addWidget(m_skip_edit);
 
+	m_color_combo->addItem("Family");
+	m_color_combo->addItem("Life");
+	m_color_combo->addItem("Energy");
+	m_color_combo->addItem("Age");
+
 	m_save->setEnabled(false);
 
 	m_hbox_save->addWidget(m_save_mode);
 	m_hbox_save->addWidget(m_save);
 
-	m_color_combo->addItem("Family");
-	m_color_combo->addItem("Life");
-	m_color_combo->addItem("Energy");
-	m_color_combo->addItem("Age");
+	m_open_combo->addItem("Random");
+
+	m_hbox_open->addWidget(m_open);
+	m_hbox_open->addWidget(m_open_combo);
 
 	m_vbox_layout->addWidget(m_start_or_stop);
 	m_vbox_layout->addWidget(m_skip);
@@ -91,6 +99,7 @@ void Interface::Settings() {
 	m_vbox_layout->addWidget(m_clear);
 	m_vbox_layout->addWidget(m_color_combo);
 	m_vbox_layout->addLayout(m_hbox_save);
+	m_vbox_layout->addLayout(m_hbox_open);
 	m_vbox_layout->addWidget(m_group_values);
 	m_vbox_layout->addWidget(m_group_features);
 	m_vbox_layout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -152,6 +161,8 @@ void Interface::Connections() {
 	connect(m_color_combo, &QComboBox::currentTextChanged, this, &Interface::AnimalColor);
 	connect(m_save_mode, &QPushButton::clicked, this, &Interface::SaveMode);
 	connect(m_save, &QPushButton::clicked, this, &Interface::Save);
+	connect(m_open, &QPushButton::clicked, this, &Interface::Open);
+	connect(m_open_combo, &QComboBox::currentTextChanged, this, &Interface::AnimalList);
 	
 	// 1 - groupbox values
 	connect(m_group_values, &QGroupBox::clicked, this, &Interface::GroupValuesVisible);
@@ -255,17 +266,31 @@ void Interface::SaveMode() {
 		m_save->setEnabled(false);
 		m_start_or_stop->setEnabled(true);
 
+		m_painter->RemoveSelection();
+
 	}
 	else {
 		m_save_mode->setText("Normal mode");
 		m_save->setEnabled(true);
 		m_start_or_stop->setEnabled(false);
 
+		m_painter->SelectAnimal();
+
 	}
 	m_save_mode_status ^= 1;
 }
 
 void Interface::Save() {
+	QString file_name = QFileDialog::getSaveFileName(this, tr("save animal"), "/SaveAnimal", tr("*.cla"));
+	if (!file_name.size()) return;
+	m_painter->SaveAnimal(file_name.toStdString());
+}
+
+void Interface::Open() {
+
+}
+
+void Interface::AnimalList() {
 
 }
 
