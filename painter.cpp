@@ -78,7 +78,15 @@ void  PainterArea::mousePressEvent(QMouseEvent* event) {
 
 	if (event->button() == Qt::LeftButton) {
 		if (m_field->GetAnimal(x, y)) m_field->KillAnimal(x, y);
-		else m_field->AddAnimal(x, y);
+		else {
+			if (m_current_animal == RANDOM_ANIMAL) {
+				m_field->AddAnimal(x, y);
+			}
+			else {
+				Animal* new_animal = new Animal(x, y, m_loaded_animals[m_current_animal]);
+				m_field->AddAnimal(x, y, new_animal);
+			}
+		}
 	}
 	else {
 		ClearArea(x, y, Config::GetEracerRadius());
@@ -153,6 +161,12 @@ void PainterArea::SetTimerInterval(int value) {
 	}
 }
 
+void PainterArea::SetAnimal(QString animal_name) {
+	if (animal_name == RANDOM_ANIMAL || m_loaded_animals.find(animal_name) != m_loaded_animals.end()) {
+		m_current_animal = animal_name;
+	}
+}
+
 void PainterArea::SetAnimalColor(AnimalColors color) {
 	m_animal_color = color;
 	update();
@@ -186,40 +200,30 @@ bool PainterArea::AnimalSelected() {
 }
 
 void PainterArea::FlasTick() {
-/*	if (m_selected_cord == NOT_CORD || !m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second)) return;
-	int x = m_selected_cord.first, y = m_selected_cord.second;
-
-	QPainter painter(this);
-	painter.setPen(Qt::white);
-	if (m_selectd_visible) painter.setBrush(GetAnimalColor(m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second)));
-	else painter.setBrush(Qt::black);
-	painter.drawRect(x * m_ceil_width, y * m_ceil_height, m_ceil_width, m_ceil_height);
-
-	m_selectd_visible = !m_selectd_visible;*/
-	
 	update();
 }
 
-bool PainterArea::SaveAnimal(std::string filename) {
+bool PainterArea::SaveAnimal(QString filename) {
 	if (m_state != States::select_animal || !AnimalSelected()) return false;
 	
 	Animal* animal = m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second);
-	bool animal_bool = animal->Save(filename);
-	return false;
+	bool animal_bool = animal->Save(filename.toStdString());
+	m_selected_cord = NOT_CORD;
+	return true;
 }
 
 void PainterArea::RemoveSelection() {
 	if (m_state != States::select_animal) return;
-	m_selected_cord = NOT_CORD;
 	m_selectd_visible = false;
 	m_state = States::paused;
 	m_flash_timer->stop();
+	update();
 }
 
-bool PainterArea::AnimalFromFile(std::string filename) {
-	Animal* animal = Animal::FromFile(0, 0, m_field, filename);
+bool PainterArea::AnimalFromFile(QString filename) {
+	Animal* animal = Animal::FromFile(0, 0, m_field, filename.toStdString());
 	if (animal) {
-		std::string animal_name = filename.substr(0, filename.length() - 4);
+		QString animal_name = filename.section("/", -1, -1).section(".", 0, 0);
 		m_loaded_animals[animal_name] = animal;
 	}
 	return animal != nullptr;

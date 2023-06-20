@@ -6,6 +6,7 @@
 
 #include "field.h"
 
+const QString RANDOM_ANIMAL = "Random";
 
 enum class States {paused, working, start, select_animal};
 enum class AnimalColors {life, family, energy, age};
@@ -21,6 +22,7 @@ public:
     const QColor earth_color = QColor(200, 180, 130);
 
     void SetTimerInterval(int value);
+    void SetAnimal(QString animal_name);
     void SetAnimalColor(AnimalColors color);
     void Clear();
     void Spawn();
@@ -31,8 +33,8 @@ public:
     void SelectAnimal();
     void RemoveSelection();
     bool AnimalSelected();
-    bool SaveAnimal(std::string filename);
-    bool AnimalFromFile(std::string filename);
+    bool SaveAnimal(QString filename);
+    bool AnimalFromFile(QString filename);
 
 protected:
     void paintEvent(QPaintEvent* event) override;
@@ -53,8 +55,8 @@ private:
     bool m_right_button_pressed = false;
     QColor GetAnimalColor(Animal* animal);
     void ClearArea(int x, int y, int r);
-    QMap<std::string, Animal*> m_loaded_animals;
-
+    QMap<QString, Animal*> m_loaded_animals;
+    QString m_current_animal = RANDOM_ANIMAL;
 
     /*Selected point features*/
     void FlasTick();

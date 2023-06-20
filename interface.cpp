@@ -14,7 +14,7 @@ Interface::Interface(PainterArea* painter) {
 
 	m_migration_check = new QCheckBox("Migration");
 	m_death_check = new QCheckBox("Death");
-	
+
 	m_skip_label = new QLabel("Skip actions: ");
 	// 1 - groupbox values
 	m_timer_interval_label = new QLabel("Action interval: ");
@@ -42,10 +42,10 @@ Interface::Interface(PainterArea* painter) {
 	// 2 - groupbox features
 	m_migration_prob_edit = new QLineEdit(QString::number(Config::GetMigrationProb()));
 	m_death_prob_edit = new QLineEdit(QString::number(Config::GetDeathProb()));
-	
+
 	m_color_combo = new QComboBox();
 	m_open_combo = new QComboBox();
-	
+
 	m_group_values = new QGroupBox("Values");
 	m_group_features = new QGroupBox("Features");
 
@@ -87,7 +87,7 @@ void Interface::Settings() {
 	m_hbox_save->addWidget(m_save_mode);
 	m_hbox_save->addWidget(m_save);
 
-	m_open_combo->addItem("Random");
+	m_open_combo->addItem(RANDOM_ANIMAL);
 
 	m_hbox_open->addWidget(m_open);
 	m_hbox_open->addWidget(m_open_combo);
@@ -103,7 +103,7 @@ void Interface::Settings() {
 	m_vbox_layout->addWidget(m_group_values);
 	m_vbox_layout->addWidget(m_group_features);
 	m_vbox_layout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-	
+
 	// 1 - groupbox values
 	m_grid_values->addWidget(m_timer_interval_label, 0, 0);
 	m_grid_values->addWidget(m_timer_interval_edit, 0, 1);
@@ -163,7 +163,7 @@ void Interface::Connections() {
 	connect(m_save, &QPushButton::clicked, this, &Interface::Save);
 	connect(m_open, &QPushButton::clicked, this, &Interface::Open);
 	connect(m_open_combo, &QComboBox::currentTextChanged, this, &Interface::AnimalList);
-	
+
 	// 1 - groupbox values
 	connect(m_group_values, &QGroupBox::clicked, this, &Interface::GroupValuesVisible);
 	connect(m_timer_interval_edit, &QLineEdit::textChanged, this, &Interface::ChangeTimerInterval);
@@ -208,7 +208,7 @@ void Interface::Start() {
 	m_migration_prob_edit->setEnabled(false);
 	m_death_check->setEnabled(false);
 	m_death_prob_edit->setEnabled(false);
-	
+
 	ChangeTimerInterval();
 	m_painter->Start();
 	m_active_status ^= 1;
@@ -219,7 +219,7 @@ void Interface::Stop() {
 
 	m_skip->setEnabled(true);
 	m_save_mode->setEnabled(true);
-	
+
 	m_timer_interval_edit->setEnabled(true);
 	m_default_energy_edit->setEnabled(true);
 	m_photosynthesis_energy_edit->setEnabled(true);
@@ -281,17 +281,25 @@ void Interface::SaveMode() {
 }
 
 void Interface::Save() {
-	QString file_name = QFileDialog::getSaveFileName(this, tr("save animal"), "/SaveAnimal", tr("*.cla"));
-	if (!file_name.size()) return;
-	m_painter->SaveAnimal(file_name.toStdString());
+	QString file_path = QFileDialog::getSaveFileName(this, tr("Save animal"), qApp->applicationDirPath() + "/", tr("*.cla"));
+	if (!file_path.size()) return;
+	QString path = qApp->applicationDirPath();
+	m_painter->SaveAnimal(file_path);
 }
 
 void Interface::Open() {
-
+	QString file_path = QFileDialog::getOpenFileName(this, tr("Load animal"), qApp->applicationDirPath() + "/", tr("*.cla"));
+	if (!file_path.size()) return;
+	if (m_painter->AnimalFromFile(file_path)) {
+		QString animal_name = file_path.section("/", -1, -1).section(".", 0, 0);
+		m_open_combo->removeItem(m_open_combo->findText(animal_name));
+		m_open_combo->addItem(animal_name);
+	}
 }
 
 void Interface::AnimalList() {
-
+	QString animal_name = m_open_combo->currentText();
+	m_painter->SetAnimal(animal_name);
 }
 
 // 1 - groupbox values
