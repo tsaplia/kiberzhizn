@@ -2,11 +2,14 @@
 
 Interface::Interface(PainterArea* painter) {
 	m_painter = painter;
-	
+
+	// 0 - main
 	m_start_or_stop = new QPushButton("Start");
 	m_skip = new QPushButton("Skip");
 	m_clear = new QPushButton("Clear");
 	m_spawn = new QPushButton("Spawn");
+	m_save_mode = new QPushButton("Save mode");
+	m_save = new QPushButton("Save");
 
 	m_migration_check = new QCheckBox("Migration");
 	m_death_check = new QCheckBox("Death");
@@ -19,11 +22,11 @@ Interface::Interface(PainterArea* painter) {
 	m_kill_energy_label = new QLabel("Kill energy: ");
 	m_reproduction_energy_label = new QLabel("Reproduction energy: ");
 	m_max_energy_label = new QLabel("Max energy: ");
+	m_random_prob_label = new QLabel("Random prob: ");
+	m_erase_radius_label = new QLabel("Erase radius: ");
 	// 2 - groupbox features
-	m_migration_in_act_label = new QLabel("Every actions: ");
 	m_migration_prob_label = new QLabel("Chance 1 in: ");
 	m_death_prob_label = new QLabel("Chance 1 in: ");
-	m_erase_radius_label = new QLabel("Erase radius: ");
 
 	m_skip_edit = new QLineEdit("100");
 	// 1 - groupbox values
@@ -33,12 +36,12 @@ Interface::Interface(PainterArea* painter) {
 	m_kill_energy_edit = new QLineEdit(QString::number(Config::GetKillEnergy()));
 	m_reproduction_energy_edit = new QLineEdit(QString::number(Config::GetReproductionEnergy()));
 	m_max_energy_edit = new QLineEdit(QString::number(Config::GetMaxEnergy()));
+	m_random_prob_edit = new QLineEdit(QString::number(Config::GetRandomProb()));
+	m_erase_radius_edit = new QLineEdit(QString::number(Config::GetEracerRadius()));
 	// 2 - groupbox features
-	m_migration_in_act_edit = new QLineEdit(QString::number(Config::GetRandomProb()));
 	m_migration_prob_edit = new QLineEdit(QString::number(Config::GetMigrationProb()));
 	m_death_prob_edit = new QLineEdit(QString::number(Config::GetDeathProb()));
-	m_erase_radius_edit = new QLineEdit(QString::number(Config::GetEracerRadius()));
-
+	
 	m_color_combo = new QComboBox();
 	
 	m_group_values = new QGroupBox("Values");
@@ -46,6 +49,7 @@ Interface::Interface(PainterArea* painter) {
 
 	m_vbox_layout = new QVBoxLayout();
 	m_hbox_skip = new QHBoxLayout();
+	m_hbox_save = new QHBoxLayout();
 	m_grid_values = new QGridLayout();
 	m_grid_features = new QGridLayout();
 
@@ -58,14 +62,22 @@ Interface::~Interface() {
 }
 
 void Interface::Settings() {
+	// 0 - main
 	m_start_or_stop->setFixedWidth(150);
 	m_skip->setFixedWidth(150);
 	m_spawn->setFixedWidth(150);
 	m_clear->setFixedWidth(150);
 	m_color_combo->setFixedWidth(150);
+	m_save_mode->setFixedWidth(100);
+	m_save->setFixedWidth(50);
 
 	m_hbox_skip->addWidget(m_skip_label);
 	m_hbox_skip->addWidget(m_skip_edit);
+
+	m_save->setEnabled(false);
+
+	m_hbox_save->addWidget(m_save_mode);
+	m_hbox_save->addWidget(m_save);
 
 	m_color_combo->addItem("Family");
 	m_color_combo->addItem("Life");
@@ -78,10 +90,12 @@ void Interface::Settings() {
 	m_vbox_layout->addWidget(m_spawn);
 	m_vbox_layout->addWidget(m_clear);
 	m_vbox_layout->addWidget(m_color_combo);
+	m_vbox_layout->addLayout(m_hbox_save);
 	m_vbox_layout->addWidget(m_group_values);
 	m_vbox_layout->addWidget(m_group_features);
 	m_vbox_layout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-
+	
+	// 1 - groupbox values
 	m_grid_values->addWidget(m_timer_interval_label, 0, 0);
 	m_grid_values->addWidget(m_timer_interval_edit, 0, 1);
 	m_grid_values->addWidget(m_default_energy_label, 1, 0);
@@ -94,6 +108,10 @@ void Interface::Settings() {
 	m_grid_values->addWidget(m_reproduction_energy_edit, 4, 1);
 	m_grid_values->addWidget(m_max_energy_label, 5, 0);
 	m_grid_values->addWidget(m_max_energy_edit, 5, 1);
+	m_grid_values->addWidget(m_random_prob_label, 6, 0);
+	m_grid_values->addWidget(m_random_prob_edit, 6, 1);
+	m_grid_values->addWidget(m_erase_radius_label, 7, 0);
+	m_grid_values->addWidget(m_erase_radius_edit, 7, 1);
 
 	m_migration_check->setChecked(Config::GetMigration());
 	m_migration_visible = Config::GetMigration();
@@ -105,22 +123,20 @@ void Interface::Settings() {
 	m_group_values->setChecked(false);
 	GroupValuesHide();
 
+	// 2 - groupbox features
 	m_grid_features->addWidget(m_migration_check, 0, 0);
-	m_grid_features->addWidget(m_migration_in_act_label, 1, 0);
-	m_grid_features->addWidget(m_migration_in_act_edit, 1, 1);
-	m_grid_features->addWidget(m_migration_prob_label, 2, 0);
-	m_grid_features->addWidget(m_migration_prob_edit, 2, 1);
-	m_grid_features->addWidget(m_death_check, 3, 0);
-	m_grid_features->addWidget(m_death_prob_label, 4, 0);
-	m_grid_features->addWidget(m_death_prob_edit, 4, 1);
-	m_grid_features->addWidget(m_erase_radius_label, 5, 0);
-	m_grid_features->addWidget(m_erase_radius_edit, 5, 1);
+	m_grid_features->addWidget(m_migration_prob_label, 1, 0);
+	m_grid_features->addWidget(m_migration_prob_edit, 1, 1);
+	m_grid_features->addWidget(m_death_check, 2, 0);
+	m_grid_features->addWidget(m_death_prob_label, 3, 0);
+	m_grid_features->addWidget(m_death_prob_edit, 3, 1);
 
 	m_group_features->setLayout(m_grid_features);
 	m_group_features->setCheckable(true);
 	m_group_features->setChecked(false);
 	GroupFeaturesHide();
 
+	// other
 	setLayout(m_vbox_layout);
 	setMaximumWidth(250);
 
@@ -128,11 +144,14 @@ void Interface::Settings() {
 }
 
 void Interface::Connections() {
+	// 0 - main
 	connect(m_start_or_stop, &QPushButton::clicked, this, &Interface::StartOrStop);
 	connect(m_skip, &QPushButton::clicked, this, &Interface::Skip);
 	connect(m_spawn, &QPushButton::clicked, this, &Interface::SpawnAnimal);
 	connect(m_clear, &QPushButton::clicked, this, &Interface::ClearField);
 	connect(m_color_combo, &QComboBox::currentTextChanged, this, &Interface::AnimalColor);
+	connect(m_save_mode, &QPushButton::clicked, this, &Interface::SaveMode);
+	connect(m_save, &QPushButton::clicked, this, &Interface::Save);
 	
 	// 1 - groupbox values
 	connect(m_group_values, &QGroupBox::clicked, this, &Interface::GroupValuesVisible);
@@ -142,16 +161,17 @@ void Interface::Connections() {
 	connect(m_kill_energy_edit, &QLineEdit::textChanged, this, &Interface::ChangeKillEnergy);
 	connect(m_reproduction_energy_edit, &QLineEdit::textChanged, this, &Interface::ChangeReproductionEnergy);
 	connect(m_max_energy_edit, &QLineEdit::textChanged, this, &Interface::ChangeMaxEnergy);
+	connect(m_random_prob_edit, &QLineEdit::textChanged, this, &Interface::ChangeRandomProb);
+	connect(m_erase_radius_edit, &QLineEdit::textChanged, this, &Interface::ChangeEraseRadius);
 	// 2 - groupbox features
 	connect(m_group_features, &QGroupBox::clicked, this, &Interface::GroupFeaturesVisible);
 	connect(m_migration_check, &QCheckBox::clicked, this, &Interface::MigrationVisible);
-	connect(m_migration_in_act_edit, &QLineEdit::textChanged, this, &Interface::ChangeMigrationInAct);
 	connect(m_migration_prob_edit, &QLineEdit::textChanged, this, &Interface::ChangeMigrationProb);
 	connect(m_death_check, &QCheckBox::clicked, this, &Interface::DeathVisible);
 	connect(m_death_prob_edit, &QLineEdit::textChanged, this, &Interface::ChangeDeathProb);
-	connect(m_erase_radius_edit, &QLineEdit::textChanged, this, &Interface::ChangeEraseRadius);
 }
 
+// 0 - main
 void Interface::StartOrStop() {
 	if (m_active_status) Stop();
 	else Start();
@@ -163,6 +183,7 @@ void Interface::Start() {
 	m_start_or_stop->setText("Stop");
 
 	m_skip->setEnabled(false);
+	m_save_mode->setEnabled(false);
 
 	m_timer_interval_edit->setEnabled(false);
 	m_default_energy_edit->setEnabled(false);
@@ -170,9 +191,9 @@ void Interface::Start() {
 	m_kill_energy_edit->setEnabled(false);
 	m_reproduction_energy_edit->setEnabled(false);
 	m_max_energy_edit->setEnabled(false);
+	m_random_prob_edit->setEnabled(false);
 
 	m_migration_check->setEnabled(false);
-	m_migration_in_act_edit->setEnabled(false);
 	m_migration_prob_edit->setEnabled(false);
 	m_death_check->setEnabled(false);
 	m_death_prob_edit->setEnabled(false);
@@ -186,6 +207,7 @@ void Interface::Stop() {
 	m_start_or_stop->setText("Start");
 
 	m_skip->setEnabled(true);
+	m_save_mode->setEnabled(true);
 	
 	m_timer_interval_edit->setEnabled(true);
 	m_default_energy_edit->setEnabled(true);
@@ -193,9 +215,9 @@ void Interface::Stop() {
 	m_kill_energy_edit->setEnabled(true);
 	m_reproduction_energy_edit->setEnabled(true);
 	m_max_energy_edit->setEnabled(true);
+	m_random_prob_edit->setEnabled(true);
 
 	m_migration_check->setEnabled(true);
-	m_migration_in_act_edit->setEnabled(true);
 	m_migration_prob_edit->setEnabled(true);
 	m_death_check->setEnabled(true);
 	m_death_prob_edit->setEnabled(true);
@@ -227,6 +249,26 @@ void Interface::AnimalColor() {
 	m_painter->SetAnimalColor(animal_color);
 }
 
+void Interface::SaveMode() {
+	if (m_save_mode_status) {
+		m_save_mode->setText("Save mode");
+		m_save->setEnabled(false);
+		m_start_or_stop->setEnabled(true);
+
+	}
+	else {
+		m_save_mode->setText("Normal mode");
+		m_save->setEnabled(true);
+		m_start_or_stop->setEnabled(false);
+
+	}
+	m_save_mode_status ^= 1;
+}
+
+void Interface::Save() {
+
+}
+
 // 1 - groupbox values
 void Interface::GroupValuesVisible() {
 	if (m_group_values_visible) GroupValuesHide();
@@ -247,6 +289,10 @@ void Interface::GroupValuesHide() {
 	m_reproduction_energy_edit->hide();
 	m_max_energy_label->hide();
 	m_max_energy_edit->hide();
+	m_random_prob_label->hide();
+	m_random_prob_edit->hide();
+	m_erase_radius_label->hide();
+	m_erase_radius_edit->hide();
 }
 
 void Interface::GroupValuesShow() {
@@ -262,6 +308,10 @@ void Interface::GroupValuesShow() {
 	m_reproduction_energy_edit->show();
 	m_max_energy_label->show();
 	m_max_energy_edit->show();
+	m_random_prob_label->show();
+	m_random_prob_edit->show();
+	m_erase_radius_label->show();
+	m_erase_radius_edit->show();
 }
 
 void Interface::ChangeTimerInterval() {
@@ -288,6 +338,14 @@ void Interface::ChangeMaxEnergy() {
 	Config::SetMaxEnergy(m_max_energy_edit->text().toInt());
 }
 
+void Interface::ChangeRandomProb() {
+	Config::SetRandomProb(m_random_prob_edit->text().toInt());
+}
+
+void Interface::ChangeEraseRadius() {
+	Config::SetEracerRadius(m_erase_radius_edit->text().toInt());
+}
+
 // 2 - groupbox features
 void Interface::GroupFeaturesVisible() {
 	if (m_group_features_visible) GroupFeaturesHide();
@@ -297,15 +355,11 @@ void Interface::GroupFeaturesVisible() {
 
 void Interface::GroupFeaturesHide() {
 	m_migration_check->hide();
-	m_migration_in_act_label->hide();
-	m_migration_in_act_edit->hide();
 	m_migration_prob_label->hide();
 	m_migration_prob_edit->hide();
 	m_death_check->hide();
 	m_death_prob_label->hide();
 	m_death_prob_edit->hide();
-	m_erase_radius_label->hide();
-	m_erase_radius_edit->hide();
 }
 
 void Interface::GroupFeaturesShow() {
@@ -313,8 +367,6 @@ void Interface::GroupFeaturesShow() {
 	if (m_migration_visible) MigrationShow();
 	m_death_check->show();
 	if (m_death_visible) DeathShow();
-	m_erase_radius_label->show();
-	m_erase_radius_edit->show();
 }
 
 void Interface::MigrationVisible() {
@@ -325,21 +377,14 @@ void Interface::MigrationVisible() {
 }
 
 void Interface::MigrationHide() {
-	m_migration_in_act_label->hide();
-	m_migration_in_act_edit->hide();
 	m_migration_prob_label->hide();
 	m_migration_prob_edit->hide();
 }
 
 void Interface::MigrationShow() {
-	m_migration_in_act_label->show();
-	m_migration_in_act_edit->show();
+
 	m_migration_prob_label->show();
 	m_migration_prob_edit->show();
-}
-
-void Interface::ChangeMigrationInAct() {
-	Config::SetRandomProb(m_migration_in_act_edit->text().toInt());
 }
 
 void Interface::ChangeMigrationProb() {
@@ -365,8 +410,4 @@ void Interface::DeathShow() {
 
 void Interface::ChangeDeathProb() {
 	Config::SetDeathProb(m_death_prob_edit->text().toInt());
-}
-
-void Interface::ChangeEraseRadius() {
-	Config::SetEracerRadius(m_erase_radius_edit->text().toInt());
 }
