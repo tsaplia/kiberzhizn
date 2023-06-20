@@ -99,11 +99,13 @@ void PainterArea::ClearArea(int x, int y, int r) {
 }
 
 void PainterArea::Start() {
+	if (m_state != States::paused && m_state != States::start) return;
 	m_timer->start();
 	m_state = States::working;
 }
 
 void PainterArea::Pause() {
+	if (m_state != States::working) return;
 	m_timer->stop();
 	m_state = States::paused;
 }
@@ -161,10 +163,14 @@ void PainterArea::Spawn() {
 
 void PainterArea::SelectAnimal() {
 	if (m_state == States::working) Pause();
-	if (m_state != States::paused) return;
+	if (m_state != States::paused || m_state != States::start) return;
 
 	m_state = States::select_animal;
 	m_flash_timer->start();
+}
+
+bool PainterArea::AnimalSelected() {
+	return m_selected_cord != NOT_CORD && m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second);
 }
 
 void PainterArea::FlasTick() {
@@ -182,23 +188,27 @@ void PainterArea::FlasTick() {
 }
 
 bool PainterArea::SaveAnimal(std::string filename) {
-	if (m_state != States::select_animal || m_selected_cord == NOT_CORD || 
-		!m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second)) return false;
-	m_state = States::paused;
-	m_flash_timer->stop();
+	if (m_state != States::select_animal || !AnimalSelected()) return false;
 	
 	Animal* animal = m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second);
 	return animal->Save(filename);
 }
 
+void PainterArea::RemoveSelection() {
+	if (m_state != States::select_animal) return;
+	m_selected_cord = NOT_CORD;
+	m_selectd_visible = false;
+	m_state = States::paused;
+	m_flash_timer->stop();
+}
+
 bool PainterArea::AnimalFromFile(std::string filename) {
-	Animal* animal;
-	bool ok = Animal::FromFile(0, 0, m_field, filename);
-	if (ok) {
+	Animal* animal = Animal::FromFile(0, 0, m_field, filename);
+	if (animal) {
 		std::string animal_name = filename.substr(0, filename.length() - 4);
 		m_loaded_animals[animal_name] = animal;
 	}
-	return ok;
+	return animal != nullptr;
 }
 
 

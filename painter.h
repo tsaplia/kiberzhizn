@@ -29,6 +29,8 @@ public:
     void TimerTick();
     void SkipMoution(int steps);
     void SelectAnimal();
+    void RemoveSelection();
+    bool AnimalSelected();
     bool SaveAnimal(std::string filename);
     bool AnimalFromFile(std::string filename);
 
