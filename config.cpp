@@ -72,6 +72,38 @@ int Config::GetMigrationProb() {
 	return m_migration_prob;
 }
 
+void Config::SetMutation(bool value) {
+	m_mutation = value;
+}
+
+bool Config::GetMutation() {
+	return m_mutation;
+}
+
+void Config::SetPhotosynthesis(bool value) {
+	m_photosynthesis = value;
+}
+
+bool Config::GetPhotosynthesis() {
+	return m_photosynthesis;
+}
+
+void Config::SetKill(bool value) {
+	m_kill = value;
+}
+
+bool Config::GetKill() {
+	return m_kill;
+}
+
+void Config::SetAlternative(bool value) {
+	m_alternative = value;
+}
+
+bool Config::GetAlternative() {
+	return m_alternative;
+}
+
 void Config::SetMigration(bool value) {
 	m_migration = value;
 }

@@ -13,6 +13,10 @@ private:
 	inline static int m_migration_prob = 2;
 	inline static int m_death_prob = 8;
 
+	inline static bool m_mutation = true;
+	inline static bool m_photosynthesis = true;
+	inline static bool m_kill = true;
+	inline static bool m_alternative = false;
 	inline static bool m_migration = false;
 	inline static bool m_death = true;
 
@@ -35,6 +39,14 @@ public:
 	static int GetMigrationProb();
 	static void SetDeathProb(int value);
 	static int GetDeathProb();
+	static void SetMutation(bool value);
+	static bool GetMutation();
+	static void SetPhotosynthesis(bool value);
+	static bool GetPhotosynthesis();
+	static void SetKill(bool value);
+	static bool GetKill();
+	static void SetAlternative(bool value);
+	static bool GetAlternative();
 	static void SetMigration(bool value);
 	static bool GetMigration();
 	static void SetDeath(bool value);

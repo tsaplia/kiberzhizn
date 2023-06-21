@@ -152,7 +152,7 @@ void PainterArea::SkipMoution(int steps){
 			m_field->RandGen(Config::ROWS * Config::COLS - m_field->GetAnimalsCnt());
 		}
 	}
-	update();
+	//update();
 }
 
 void PainterArea::SetTimerInterval(int value) {
@@ -217,6 +217,7 @@ void PainterArea::RemoveSelection() {
 	m_selectd_visible = false;
 	m_state = States::paused;
 	m_flash_timer->stop();
+	m_selected_cord = NOT_CORD;
 	update();
 }
 

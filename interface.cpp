@@ -12,8 +12,14 @@ Interface::Interface(PainterArea* painter) {
 	m_save = new QPushButton("Save");
 	m_open = new QPushButton("Open");
 
+	m_mutation_check = new QCheckBox("Mutation");
+	m_photosynthesis_check = new QCheckBox("Photosynthesis");
+	m_kill_check = new QCheckBox("Kill");
+	m_alternative_check = new QCheckBox("Alternative reprod. and kill");
 	m_migration_check = new QCheckBox("Migration");
 	m_death_check = new QCheckBox("Death");
+
+	m_skip_progress = new QProgressBar();
 
 	m_skip_label = new QLabel("Skip actions: ");
 	// 1 - groupbox values
@@ -31,7 +37,7 @@ Interface::Interface(PainterArea* painter) {
 
 	m_skip_edit = new QLineEdit("100");
 	// 1 - groupbox values
-	m_timer_interval_edit = new QLineEdit(QString::number(TIMER_INTERVAL));
+	m_timer_interval_edit = new QLineEdit(QString::number(Config::DEFAULT_INTERVAL));
 	m_default_energy_edit = new QLineEdit(QString::number(Config::GetDefaultEnergy()));
 	m_photosynthesis_energy_edit = new QLineEdit(QString::number(Config::GetPhotosynthesisEnergy()));
 	m_kill_energy_edit = new QLineEdit(QString::number(Config::GetKillEnergy()));
@@ -68,6 +74,7 @@ void Interface::Settings() {
 	// 0 - main
 	m_start_or_stop->setFixedWidth(150);
 	m_skip->setFixedWidth(150);
+	m_skip_progress->setFixedWidth(150);
 	m_spawn->setFixedWidth(150);
 	m_clear->setFixedWidth(150);
 	m_color_combo->setFixedWidth(150);
@@ -76,6 +83,9 @@ void Interface::Settings() {
 
 	m_hbox_skip->addWidget(m_skip_label);
 	m_hbox_skip->addWidget(m_skip_edit);
+
+	m_skip_progress->setOrientation(Qt::Horizontal);
+	m_skip_progress->hide();
 
 	m_color_combo->addItem("Family");
 	m_color_combo->addItem("Life");
@@ -94,6 +104,7 @@ void Interface::Settings() {
 
 	m_vbox_layout->addWidget(m_start_or_stop);
 	m_vbox_layout->addWidget(m_skip);
+	m_vbox_layout->addWidget(m_skip_progress);
 	m_vbox_layout->addLayout(m_hbox_skip);
 	m_vbox_layout->addWidget(m_spawn);
 	m_vbox_layout->addWidget(m_clear);
@@ -122,23 +133,31 @@ void Interface::Settings() {
 	m_grid_values->addWidget(m_erase_radius_label, 7, 0);
 	m_grid_values->addWidget(m_erase_radius_edit, 7, 1);
 
-	m_migration_check->setChecked(Config::GetMigration());
-	m_migration_visible = Config::GetMigration();
-	m_death_check->setChecked(Config::GetDeath());
-	m_death_visible = Config::GetDeath();
-
 	m_group_values->setLayout(m_grid_values);
 	m_group_values->setCheckable(true);
 	m_group_values->setChecked(false);
 	GroupValuesHide();
 
 	// 2 - groupbox features
-	m_grid_features->addWidget(m_migration_check, 0, 0);
-	m_grid_features->addWidget(m_migration_prob_label, 1, 0);
-	m_grid_features->addWidget(m_migration_prob_edit, 1, 1);
-	m_grid_features->addWidget(m_death_check, 2, 0);
-	m_grid_features->addWidget(m_death_prob_label, 3, 0);
-	m_grid_features->addWidget(m_death_prob_edit, 3, 1);
+	m_mutation_check->setChecked(Config::GetMutation());
+	m_photosynthesis_check->setChecked(Config::GetPhotosynthesis());
+	m_kill_check->setChecked(Config::GetKill());
+	m_alternative_check->setChecked(Config::GetAlternative());
+	m_migration_check->setChecked(Config::GetMigration());
+	m_migration_visible = Config::GetMigration();
+	m_death_check->setChecked(Config::GetDeath());
+	m_death_visible = Config::GetDeath();
+
+	m_grid_features->addWidget(m_mutation_check, 0, 0);
+	m_grid_features->addWidget(m_photosynthesis_check, 1, 0);
+	m_grid_features->addWidget(m_kill_check, 2, 0);
+	m_grid_features->addWidget(m_alternative_check, 3, 0);
+	m_grid_features->addWidget(m_migration_check, 4, 0);
+	m_grid_features->addWidget(m_migration_prob_label, 5, 0);
+	m_grid_features->addWidget(m_migration_prob_edit, 5, 1);
+	m_grid_features->addWidget(m_death_check, 6, 0);
+	m_grid_features->addWidget(m_death_prob_label, 7, 0);
+	m_grid_features->addWidget(m_death_prob_edit, 7, 1);
 
 	m_group_features->setLayout(m_grid_features);
 	m_group_features->setCheckable(true);
@@ -149,7 +168,7 @@ void Interface::Settings() {
 	setLayout(m_vbox_layout);
 	setMaximumWidth(250);
 
-	m_painter->SetTimerInterval(TIMER_INTERVAL);
+	m_painter->SetTimerInterval(Config::DEFAULT_INTERVAL);
 }
 
 void Interface::Connections() {
@@ -176,6 +195,10 @@ void Interface::Connections() {
 	connect(m_erase_radius_edit, &QLineEdit::textChanged, this, &Interface::ChangeEraseRadius);
 	// 2 - groupbox features
 	connect(m_group_features, &QGroupBox::clicked, this, &Interface::GroupFeaturesVisible);
+	connect(m_mutation_check, &QCheckBox::clicked, this, &Interface::ChangeMutation);
+	connect(m_photosynthesis_check, &QCheckBox::clicked, this, &Interface::ChangePhotosynthesis);
+	connect(m_kill_check, &QCheckBox::clicked, this, &Interface::ChangeKill);
+	connect(m_alternative_check, &QCheckBox::clicked, this, &Interface::ChangeAlternative);
 	connect(m_migration_check, &QCheckBox::clicked, this, &Interface::MigrationVisible);
 	connect(m_migration_prob_edit, &QLineEdit::textChanged, this, &Interface::ChangeMigrationProb);
 	connect(m_death_check, &QCheckBox::clicked, this, &Interface::DeathVisible);
@@ -238,7 +261,15 @@ void Interface::Stop() {
 }
 
 void Interface::Skip() {
-	m_painter->SkipMoution(m_skip_edit->text().toInt());
+	int skip = m_skip_edit->text().toInt();
+	m_skip_progress->setRange(0, skip);
+	m_skip_progress->show();
+	for(int i=0;i<=skip;i++) {
+		m_painter->SkipMoution(1);
+		m_skip_progress->setValue(i);
+	}
+	m_skip_progress->hide();
+	m_painter->update();
 }
 
 void Interface::SpawnAnimal() {
@@ -387,6 +418,10 @@ void Interface::GroupFeaturesVisible() {
 }
 
 void Interface::GroupFeaturesHide() {
+	m_mutation_check->hide();
+	m_photosynthesis_check->hide();
+	m_kill_check->hide();
+	m_alternative_check->hide();
 	m_migration_check->hide();
 	m_migration_prob_label->hide();
 	m_migration_prob_edit->hide();
@@ -396,10 +431,30 @@ void Interface::GroupFeaturesHide() {
 }
 
 void Interface::GroupFeaturesShow() {
+	m_mutation_check->show();
+	m_photosynthesis_check->show();
+	m_kill_check->show();
+	m_alternative_check->show();
 	m_migration_check->show();
 	if (m_migration_visible) MigrationShow();
 	m_death_check->show();
 	if (m_death_visible) DeathShow();
+}
+
+void Interface::ChangeMutation() {
+	Config::SetMutation(m_mutation_check->isChecked());
+}
+
+void Interface::ChangePhotosynthesis() {
+	Config::SetPhotosynthesis(m_photosynthesis_check->isChecked());
+}
+
+void Interface::ChangeKill() {
+	Config::SetKill(m_kill_check->isChecked());
+}
+
+void Interface::ChangeAlternative() {
+	Config::SetAlternative(m_alternative_check->isChecked());
 }
 
 void Interface::MigrationVisible() {

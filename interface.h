@@ -12,9 +12,6 @@ class Interface : public QWidget
     Q_OBJECT
 
 private:
-    int WEIGHT_MULTI = Config::WEIGHT_MULTI;
-    int TIMER_INTERVAL = 500;
-
     bool m_active_status = 0;
     bool m_save_mode_status = 0;
     bool m_group_values_visible = 0;
@@ -32,9 +29,15 @@ private:
     QPushButton* m_save;
     QPushButton* m_open;
 
+    QCheckBox* m_mutation_check;
+    QCheckBox* m_photosynthesis_check;
+    QCheckBox* m_kill_check;
+    QCheckBox* m_alternative_check;
     QCheckBox* m_migration_check;
     QCheckBox* m_death_check;
     
+    QProgressBar* m_skip_progress;
+
     QLabel* m_skip_label;
     // 1 - groupbox values
     QLabel* m_timer_interval_label;
@@ -113,6 +116,10 @@ private slots:
     void ChangeEraseRadius();
     // 2 - groupbox features
     void GroupFeaturesVisible();
+    void ChangeMutation();
+    void ChangePhotosynthesis();
+    void ChangeKill();
+    void ChangeAlternative();
     void MigrationVisible();
     void ChangeMigrationProb();
     void DeathVisible();
