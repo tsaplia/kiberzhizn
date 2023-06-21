@@ -152,7 +152,6 @@ void PainterArea::SkipMoution(int steps){
 			m_field->RandGen(Config::ROWS * Config::COLS - m_field->GetAnimalsCnt());
 		}
 	}
-	//update();
 }
 
 void PainterArea::SetTimerInterval(int value) {

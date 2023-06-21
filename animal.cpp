@@ -65,7 +65,7 @@ void Animal::Move() {
 }
 
 bool Animal::CanSynthesize() {
-	return m_parent->GetSurface(m_x, m_y) == SurfaceTypes::earth && m_energy <= Config::GetMaxEnergy();
+	return Config::GetPhotosynthesis() && m_parent->GetSurface(m_x, m_y) == SurfaceTypes::earth && m_energy <= Config::GetMaxEnergy();
 }
 
 void Animal::Photosynthesis() {
@@ -75,26 +75,37 @@ void Animal::Photosynthesis() {
 
 bool Animal::CanAttack() {
 	std::pair<int, int> look = LooksAt();
-	return look != NOT_CORD && m_parent->GetAnimal(look.first, look.second) && m_energy <= Config::GetMaxEnergy();
+	return Config::GetKill() && look != NOT_CORD && m_parent->GetAnimal(look.first, look.second) && m_energy <= Config::GetMaxEnergy();
 }
 
 void Animal::Attack() {
 	std::pair<int, int> look = LooksAt();
+	if (Config::GetAlternative()) {
+		m_energy += m_parent->GetAnimal(look.first, look.second)->m_energy;
+	}
+	else {
+		m_energy += Config::GetKillEnergy();
+	}
 	m_parent->KillAnimal(look.first, look.second);
-	m_energy += Config::GetKillEnergy();
 	m_attacks_cnt++;
 }
 
 bool Animal::CanReproduce() {
 	std::pair<int, int> look = LooksAt();
-	return look != NOT_CORD && !m_parent->GetAnimal(look.first, look.second) &&
-		m_energy > Config::GetReproductionEnergy();
+	return (Config::GetAlternative() && m_energy > 1) || (look != NOT_CORD && !m_parent->GetAnimal(look.first, look.second) &&
+		m_energy > Config::GetReproductionEnergy());
 }
 
 void Animal::Reproduction() {
 	std::pair<int, int> look = LooksAt();
 	m_parent->AddAnimal(look.first, look.second, Animal::Mutation(this));
-	m_energy -= Config::GetReproductionEnergy();
+	if (Config::GetAlternative()) {
+		m_parent->GetAnimal(look.first, look.second)->m_energy = m_energy / 2;
+		m_energy /= 2;
+	}
+	else {
+		m_energy -= Config::GetReproductionEnergy();
+	}
 }
 
 void Animal::Motion() {
@@ -107,7 +118,7 @@ void Animal::Motion() {
 	if (!CanReproduce()) output[3] = -INFINITY;
 
 	int res_ind = std::max_element(output.begin(), output.begin() + 4) - output.begin();
-	if (output[res_ind] != -INFINITY) {
+	if (output[res_ind] > 0) {  //optional != -INFINITY
 		switch (res_ind)
 		{
 		case 0:
@@ -129,7 +140,7 @@ void Animal::Motion() {
 	else if (output[4] < -Config::ROTATION_ACTIVATION) m_direction = AnimalDirections((static_cast<int>(m_direction) + 3) % 4);
 	m_energy--;
 	m_age++;
-	if (m_energy == 0 || (Config::GetDeath() && rand() % (std::max(Config::MAX_AGE - m_age, 1) * Config::GetDeathProb()) == 0)) {
+	if (m_energy < 0 || (Config::GetDeath() && rand() % (std::max(Config::MAX_AGE - m_age, 1) * Config::GetDeathProb()) == 0)) {
 		m_parent->KillAnimal(m_x, m_y);
 	}
 }
@@ -188,8 +199,7 @@ Animal* Animal::Mutation(Animal* animal) {
 	NetworkOfNodes* brain = new NetworkOfNodes(animal->m_brain);
 	QColor color = animal->m_color;
 
-	//srand(time(NULL));
-	if (rand() % Config::MUTATION_PROBABILITY == 0) {
+	if (Config::GetMutation() && rand() % Config::MUTATION_PROBABILITY == 0) {
 		int mutations_cnt = animal->m_brain->Mutations();
 		color.setHsl((color.hue() + mutations_cnt) % 360, color.saturation(), color.lightness());
 	}
