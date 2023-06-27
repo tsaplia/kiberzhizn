@@ -91,9 +91,9 @@ void Animal::Attack() {
 }
 
 bool Animal::CanReproduce() {
-	std::pair<int, int> look = LooksAt();
-	return (Config::GetAlternative() && m_energy > 1) || (look != NOT_CORD && !m_parent->GetAnimal(look.first, look.second) &&
-		m_energy > Config::GetReproductionEnergy());
+    std::pair<int, int> look = LooksAt();
+    return look != NOT_CORD && !m_parent->GetAnimal(look.first, look.second) &&
+        (m_energy > Config::GetReproductionEnergy() || (Config::GetAlternative() && m_energy > 1));
 }
 
 void Animal::Reproduction() {
