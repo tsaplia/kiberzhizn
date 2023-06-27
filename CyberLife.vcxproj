@@ -21,6 +21,7 @@
     <ClCompile Include="node.cpp" />
     <ClCompile Include="painter.cpp" />
     <ClCompile Include="file_actions.cpp" />
+    <ClCompile Include="statistics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="cyber_life.h" />
@@ -29,6 +30,7 @@
     <ClInclude Include="animal.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="field.h" />
+    <QtMoc Include="statistics.h" />
     <QtMoc Include="interface.h" />
     <ClInclude Include="network_of_nodes.h" />
     <ClInclude Include="node.h" />
