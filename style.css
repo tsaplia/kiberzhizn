@@ -1,0 +1,68 @@
+CyberLife {
+    background-color: #4c4c4c;
+}
+
+QPushButton, QLineEdit, QComboBox {
+    background-color: #5c5c5c;
+}
+
+QLabel, QPushButton, QCheckBox, QLineEdit, QComboBox, QGroupBox, QListView {
+    color: #ffffff;
+    font-weight: bold;
+    font-style: italic;
+}
+
+QPushButton {
+    text-align: center;
+    border: solid;
+    border-right: 2px solid #de650f;
+    border-bottom: 2px solid #de650f;
+}
+
+QPushButton::hover, QLineEdit::hover, QComboBox::hover {
+    background-color: #6c6c6c;
+}
+
+QPushButton::pressed {
+    background-color: #3c3c3c;
+}
+
+QPushButton::!enabled, QLineEdit::!enabled {
+    background-color: #4c4c4c;
+    color: #dcdcdc;
+}
+
+QLineEdit {
+    border: solid;
+    border-right: 2px solid #de650f;
+    border-bottom: 2px solid #de650f;
+}
+
+QListView {
+    background-color: #5c5c5c;
+}
+
+QGroupBox {
+    border: 2px solid #de650f;
+    margin-top: 1ex;
+    padding-top: 5px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    padding: 0 3px;
+    border: solid;
+    border-bottom: 2px solid #de650f;
+}
+
+QCheckBox::indicator:checked, QGroupBox::indicator:checked {
+    background-color: #de650f;
+    border: solid;
+    border-radius: 4px;
+}
+
+QCheckBox::indicator:unchecked, QGroupBox::indicator:unchecked {
+    background-color: #3c3c3c;
+    border: solid;
+    border-radius: 4px;
+}

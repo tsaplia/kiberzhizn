@@ -37,6 +37,9 @@
   <ItemGroup>
     <QtRcc Include="cyber_life.qrc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="style.css" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FF2EAA55-A50F-4C2C-9693-7DB5A3F9D987}</ProjectGuid>
     <Keyword>QtVS_v304</Keyword>

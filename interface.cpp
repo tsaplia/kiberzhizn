@@ -74,15 +74,20 @@ void Interface::Settings() {
 	// 0 - main
 	m_start_or_stop->setFixedWidth(150);
 	m_skip->setFixedWidth(150);
+	m_skip_label->setFixedWidth(100);
+	m_skip_edit->setFixedWidth(44);
 	m_skip_progress->setFixedWidth(150);
 	m_spawn->setFixedWidth(150);
 	m_clear->setFixedWidth(150);
 	m_color_combo->setFixedWidth(150);
 	m_save_mode->setFixedWidth(100);
-	m_save->setFixedWidth(50);
+	m_save->setFixedWidth(44);
+	m_open->setFixedWidth(44);
+	m_open_combo->setFixedWidth(100);
 
 	m_hbox_skip->addWidget(m_skip_label);
 	m_hbox_skip->addWidget(m_skip_edit);
+	m_hbox_skip->setAlignment(Qt::AlignLeft);
 
 	m_skip_progress->setOrientation(Qt::Horizontal);
 	m_skip_progress->hide();
@@ -96,11 +101,13 @@ void Interface::Settings() {
 
 	m_hbox_save->addWidget(m_save_mode);
 	m_hbox_save->addWidget(m_save);
+	m_hbox_save->setAlignment(Qt::AlignLeft);
 
 	m_open_combo->addItem(RANDOM_ANIMAL);
 
 	m_hbox_open->addWidget(m_open);
 	m_hbox_open->addWidget(m_open_combo);
+	m_hbox_open->setAlignment(Qt::AlignLeft);
 
 	m_vbox_layout->addWidget(m_start_or_stop);
 	m_vbox_layout->addWidget(m_skip);

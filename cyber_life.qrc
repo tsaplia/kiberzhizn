@@ -1,4 +1,6 @@
 <RCC>
-    <qresource prefix="CyberLife">
+    <qresource prefix="/CyberLife"/>
+    <qresource prefix="/">
+        <file>style.css</file>
     </qresource>
 </RCC>
