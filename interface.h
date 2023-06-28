@@ -6,6 +6,7 @@
 
 #include "painter.h"
 #include "node.h"
+#include "statistics.h"
 
 class Interface : public QWidget
 {
@@ -20,6 +21,7 @@ private:
     bool m_death_visible = 0;
 
     PainterArea* m_painter;
+    Statistics* m_statistics;
     
     QPushButton* m_start_or_stop;
     QPushButton* m_skip;
@@ -72,6 +74,7 @@ private:
     QGroupBox* m_group_values;
     QGroupBox* m_group_features;
     
+    QHBoxLayout* m_hbox_layout;
     QVBoxLayout* m_vbox_layout;
     QHBoxLayout* m_hbox_skip;
     QHBoxLayout* m_hbox_save;
@@ -126,6 +129,6 @@ private slots:
     void ChangeDeathProb();
 
 public:
-    Interface(PainterArea* painter);
+    Interface(PainterArea* painter, Statistics* statistics);
     ~Interface();
 };

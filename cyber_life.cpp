@@ -4,7 +4,7 @@ CyberLife::CyberLife(QWidget *parent)
     : QWidget(parent) {
     m_statistics = new Statistics();
     m_painter = new PainterArea(m_statistics);
-    m_interface = new Interface(m_painter);
+    m_interface = new Interface(m_painter, m_statistics);
     
     m_hbox_layout = new QHBoxLayout(this);
 

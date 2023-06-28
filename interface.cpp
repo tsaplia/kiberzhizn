@@ -1,7 +1,8 @@
 #include "interface.h"
 
-Interface::Interface(PainterArea* painter) {
+Interface::Interface(PainterArea* painter, Statistics* statistics) {
 	m_painter = painter;
+	m_statistics = statistics;
 
 	// 0 - main
 	m_start_or_stop = new QPushButton("Start");
@@ -55,6 +56,7 @@ Interface::Interface(PainterArea* painter) {
 	m_group_values = new QGroupBox("Values");
 	m_group_features = new QGroupBox("Features");
 
+	m_hbox_layout = new QHBoxLayout();
 	m_vbox_layout = new QVBoxLayout();
 	m_hbox_skip = new QHBoxLayout();
 	m_hbox_save = new QHBoxLayout();
@@ -140,6 +142,8 @@ void Interface::Settings() {
 	m_grid_values->addWidget(m_erase_radius_label, 7, 0);
 	m_grid_values->addWidget(m_erase_radius_edit, 7, 1);
 
+	m_group_values->setMaximumWidth(250);
+
 	m_group_values->setLayout(m_grid_values);
 	m_group_values->setCheckable(true);
 	m_group_values->setChecked(false);
@@ -166,14 +170,19 @@ void Interface::Settings() {
 	m_grid_features->addWidget(m_death_prob_label, 7, 0);
 	m_grid_features->addWidget(m_death_prob_edit, 7, 1);
 
+	m_group_features->setMaximumWidth(250);
+
 	m_group_features->setLayout(m_grid_features);
 	m_group_features->setCheckable(true);
 	m_group_features->setChecked(false);
 	GroupFeaturesHide();
 
+	m_hbox_layout->addLayout(m_vbox_layout);
+	m_hbox_layout->addWidget(m_statistics);
+	m_hbox_layout->setAlignment(Qt::AlignLeft);
+
 	// other
-	setLayout(m_vbox_layout);
-	setMaximumWidth(250);
+	setLayout(m_hbox_layout);
 
 	m_painter->SetTimerInterval(Config::DEFAULT_INTERVAL);
 }

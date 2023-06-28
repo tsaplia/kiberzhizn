@@ -2,6 +2,12 @@ CyberLife, QScrollArea, Interface {
     background-color: #4c4c4c;
 }
 
+Statistics, QVBoxLayout {
+    border: solid;
+    border-right: 2px solid #dedede;
+    border-bottom: 2px solid #dedede;
+}
+
 QPushButton, QLineEdit, QComboBox {
     background-color: #5c5c5c;
 }
@@ -15,8 +21,8 @@ QLabel, QPushButton, QCheckBox, QLineEdit, QComboBox, QGroupBox, QListView {
 QPushButton {
     text-align: center;
     border: solid;
-    border-right: 2px solid #de650f;
-    border-bottom: 2px solid #de650f;
+    border-right: 2px solid #dedede;
+    border-bottom: 2px solid #dedede;
 }
 
 QPushButton::hover, QLineEdit::hover, QComboBox::hover {
@@ -34,8 +40,8 @@ QPushButton::!enabled, QLineEdit::!enabled {
 
 QLineEdit {
     border: solid;
-    border-right: 2px solid #de650f;
-    border-bottom: 2px solid #de650f;
+    border-right: 2px solid #dedede;
+    border-bottom: 2px solid #dedede;
 }
 
 QListView {
@@ -43,7 +49,7 @@ QListView {
 }
 
 QGroupBox {
-    border: 2px solid #de650f;
+    border: 2px solid #dedede;
     margin-top: 1ex;
     padding-top: 5px;
 }
@@ -52,11 +58,11 @@ QGroupBox::title {
     subcontrol-origin: margin;
     padding: 0 3px;
     border: solid;
-    border-bottom: 2px solid #de650f;
+    border-bottom: 2px solid #dedede;
 }
 
 QCheckBox::indicator:checked, QGroupBox::indicator:checked {
-    background-color: #de650f;
+    background-color: #dedede;
     border: solid;
     border-radius: 4px;
 }
