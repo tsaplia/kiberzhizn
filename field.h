@@ -19,6 +19,7 @@ public:
     void UpdatePosition(Animal* animal, int x, int y);
     SurfaceTypes GetSurface(int x, int y);
     int GetAnimalsCnt();
+    FieldStats GetStats();
     int GetWaterLavel();
     bool IsInside(int x, int y);
     void Moution();
@@ -27,6 +28,8 @@ public:
 
 private:
     int m_animals_cnt = 0;
+    int m_kills_cnt = 0;
+    int m_born_cnt = 0;
     int m_water_level;
     int m_width;
     int m_height;

@@ -97,6 +97,7 @@ bool Animal::CanReproduce() {
 }
 
 void Animal::Reproduction() {
+	m_reproduction_cnt++;
 	std::pair<int, int> look = LooksAt();
 	m_parent->AddAnimal(look.first, look.second, Animal::Mutation(this));
 	if (Config::GetAlternative()) {
@@ -189,6 +190,10 @@ QColor Animal::GetEnergyColor() {
 
 QColor Animal::GetAgeColor() {
 	return QColor::fromHsl(33, 255, 255 - std::min(m_age, Config::MAX_AGE) * 255 / Config::MAX_AGE);
+}
+
+AnimalStats Animal::GetStats() {
+	return AnimalStats {m_energy, m_age, m_attacks_cnt, m_synthesis_cnt, m_reproduction_cnt, m_color, m_x, m_y};
 }
 
 Animal::~Animal() {

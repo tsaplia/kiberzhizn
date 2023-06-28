@@ -1,6 +1,7 @@
 #include "painter.h"
 
-PainterArea::PainterArea() {
+PainterArea::PainterArea(Statistics* stats) {
+	m_stats = stats;
 	m_field = new Field(Config::COLS, Config::ROWS);
 	m_timer = new QTimer();
 	m_timer->setInterval(Config::DEFAULT_INTERVAL);

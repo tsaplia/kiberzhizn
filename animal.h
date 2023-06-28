@@ -3,6 +3,7 @@
 #include <QtCore>
 #include <QColor>
 #include "network_of_nodes.h"
+#include "statistics.h"
 
 const std::pair<int, int> NOT_CORD = std::make_pair(-1, -1);
 
@@ -22,6 +23,7 @@ public:
     QColor GetFamilyColor();
     QColor GetEnergyColor();
     QColor GetAgeColor();
+    AnimalStats GetStats();
     bool Save(std::string filename);
     static Animal* FromFile(int x, int y, Field* parent, std::string filename);
 
@@ -49,4 +51,5 @@ private:
     AnimalDirections m_direction;
     int m_attacks_cnt;
     int m_synthesis_cnt;
+    int m_reproduction_cnt;
 };

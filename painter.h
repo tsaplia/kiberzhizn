@@ -5,6 +5,7 @@
 #include <QtGui>
 
 #include "field.h"
+#include "statistics.h"
 
 const QString RANDOM_ANIMAL = "Random";
 
@@ -16,7 +17,7 @@ class PainterArea : public QWidget
     Q_OBJECT
 
 public:
-    PainterArea();
+    PainterArea(Statistics* stats);
     ~PainterArea();
     const QColor water_color = QColor(100, 230, 255);
     const QColor earth_color = QColor(200, 180, 130);
@@ -46,6 +47,7 @@ protected:
 private:
     Field* m_field;
     QTimer* m_timer;
+    Statistics* m_stats;
     int m_width;
     int m_height;
     double m_ceil_width;

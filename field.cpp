@@ -26,6 +26,7 @@ void Field::AddAnimal(int x, int y, Animal* animal) {
 	if (this->GetAnimal(x, y)) this->KillAnimal(x, y);
 
 	m_animals_cnt++;
+	m_born_cnt++;
 	m_animals[x][y] = animal;
 	m_animal_list[m_animals[x][y]] = { x,y };
 	m_processed.insert(animal);
@@ -39,6 +40,7 @@ void Field::KillAnimal(int x, int y) {
 	if(!IsInside(x, y) || !m_animals[x][y]) return;
 
 	m_animals_cnt--;
+	m_kills_cnt++;
 	m_animal_list.erase(m_animals[x][y]);
 	delete m_animals[x][y];
 	m_animals[x][y] = nullptr;
@@ -65,6 +67,10 @@ SurfaceTypes Field::GetSurface(int x, int y) {
 
 int Field::GetAnimalsCnt() {
 	return m_animals_cnt;
+}
+
+FieldStats Field::GetStats() {
+	return FieldStats { m_animals_cnt, m_kills_cnt, m_born_cnt };
 }
 
 int Field::GetWaterLavel() {

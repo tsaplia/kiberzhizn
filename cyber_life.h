@@ -6,6 +6,7 @@
 
 #include "painter.h"
 #include "interface.h"
+#include "statistics.h"
 
 class CyberLife : public QWidget
 {
@@ -14,6 +15,7 @@ class CyberLife : public QWidget
 private:
     PainterArea* m_painter;
     Interface* m_interface;
+    Statistics* m_statistics;
     QHBoxLayout* m_hbox_layout;
     QScrollArea* m_scroll_area;
 
