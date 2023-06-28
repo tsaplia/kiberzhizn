@@ -4,6 +4,26 @@
 #include <QtCore>
 #include <QtGui>
 
+class AnimalStats {
+public:
+	int energy;
+	int age;
+	int kills;
+	int synthesize;
+	int reproduction;
+	QColor color;
+	int x;
+	int y;
+};
+
+class FieldStats {
+public:
+	int animals;
+	int dead;
+	int born;
+};
+
+
 class Statistics : public QWidget {
 
 	Q_OBJECT
@@ -46,28 +66,9 @@ private:
 	void Settings();
 
 public:
-//	FieldStats m_field_stats;
-//	AnimalStats m_animal_stats;
-
 	Statistics();
 	~Statistics();
-};
-
-class AnimalStats {
-public:
-	int energy;
-	int age;
-	int kills;
-	int synthesize;
-	int reproduction;
-	QColor color;
-	int x;
-	int y;
-};
-
-class FieldStats {
-public:
-	int animals;
-	int dead;
-	int born;
+	void SetFieldStats(FieldStats stats);
+	void SetAnimalStats(AnimalStats stats);
+	void HideAnimalStats();
 };

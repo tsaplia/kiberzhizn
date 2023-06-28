@@ -4,6 +4,8 @@
 
 enum class SurfaceTypes { water, earth };
 
+class FieldStats;
+
 class Field
 {
 public:

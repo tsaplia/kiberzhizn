@@ -39,18 +39,18 @@ void PainterArea::paintEvent(QPaintEvent* event) {
 			painter.drawRect(x * m_ceil_width, y * m_ceil_height, m_ceil_width, m_ceil_height);
 		}
 	}
+	m_stats->SetFieldStats(m_field->GetStats());
 
 	if (m_selected_cord == NOT_CORD || !m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second)) return;
 	int x = m_selected_cord.first, y = m_selected_cord.second;
+	Animal* selected_animal = m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second);
 
-//	QPainter painter(this);
 	painter.setPen(Qt::white);
-	if (m_selectd_visible) painter.setBrush(GetAnimalColor(m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second)));
+	if (m_selectd_visible) painter.setBrush(GetAnimalColor(selected_animal));
 	else painter.setBrush(Qt::black);
 	painter.drawRect(x * m_ceil_width, y * m_ceil_height, m_ceil_width, m_ceil_height);
 
 	m_selectd_visible = !m_selectd_visible;
-
 }
 
 QColor PainterArea::GetAnimalColor(Animal* animal) {
@@ -74,6 +74,12 @@ void  PainterArea::mousePressEvent(QMouseEvent* event) {
 
 	if (m_state == States::select_animal) {
 		m_selected_cord = std::make_pair(x, y);
+		if (AnimalSelected()) {
+			m_stats->SetAnimalStats(m_field->GetAnimal(x,y)->GetStats());
+		}
+		else {
+			m_stats->HideAnimalStats();
+		}
 		return;
 	}
 
@@ -143,7 +149,7 @@ void PainterArea::TimerTick() {
 	if (m_state == States::working) m_timer->start();
 }
 
-void PainterArea::SkipMoution(int steps){
+void PainterArea::SkipMoution(int steps) {
 	if (m_state == States::working) Pause();
 	if (m_state != States::paused && m_state != States::start) return;
 
@@ -205,10 +211,11 @@ void PainterArea::FlasTick() {
 
 bool PainterArea::SaveAnimal(QString filename) {
 	if (m_state != States::select_animal || !AnimalSelected()) return false;
-	
+
 	Animal* animal = m_field->GetAnimal(m_selected_cord.first, m_selected_cord.second);
 	bool animal_bool = animal->Save(filename.toStdString());
 	m_selected_cord = NOT_CORD;
+	m_stats->HideAnimalStats();
 	return true;
 }
 
@@ -218,6 +225,7 @@ void PainterArea::RemoveSelection() {
 	m_state = States::paused;
 	m_flash_timer->stop();
 	m_selected_cord = NOT_CORD;
+	m_stats->HideAnimalStats();
 	update();
 }
 
@@ -229,5 +237,3 @@ bool PainterArea::AnimalFromFile(QString filename) {
 	}
 	return animal != nullptr;
 }
-
-

@@ -3,11 +3,11 @@
 #include <QtCore>
 #include <QColor>
 #include "network_of_nodes.h"
-#include "statistics.h"
 
 const std::pair<int, int> NOT_CORD = std::make_pair(-1, -1);
 
 class Field; 
+class AnimalStats;
 
 enum class AnimalDirections { left, up, right, down };
 

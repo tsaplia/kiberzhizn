@@ -1,5 +1,6 @@
 #include "animal.h"
 #include "field.h"
+#include "statistics.h"
 
 Animal::Animal(int x, int y, Field* parent) {
 	InitEmpty(x, y, parent);
@@ -30,7 +31,7 @@ void Animal::InitEmpty(int x, int y, Field* parent) {
 	m_parent = parent;
 	m_direction = AnimalDirections(rand() % 4);
 	m_energy = Config::GetDefaultEnergy();
-	m_attacks_cnt = m_synthesis_cnt = m_age = 0;
+	m_attacks_cnt = m_synthesis_cnt = m_age = m_reproduction_cnt = 0;
 }
 
 std::pair<int, int> Animal::LooksAt() {
@@ -193,7 +194,7 @@ QColor Animal::GetAgeColor() {
 }
 
 AnimalStats Animal::GetStats() {
-	return AnimalStats {m_energy, m_age, m_attacks_cnt, m_synthesis_cnt, m_reproduction_cnt, m_color, m_x, m_y};
+	return	 {m_energy, m_age, m_attacks_cnt, m_synthesis_cnt, m_reproduction_cnt, m_color, m_x, m_y};
 }
 
 Animal::~Animal() {

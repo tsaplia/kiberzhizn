@@ -81,3 +81,26 @@ void Statistics::Settings() {
 	
 	setLayout(m_vbox_layout);
 }
+
+void Statistics::SetFieldStats(FieldStats stats) {
+	// show animal grid
+	m_animals_value->setText(QString::number(stats.animals));
+	m_born_value->setText(QString::number(stats.born));
+	m_dead_value->setText(QString::number(stats.dead));
+}
+
+void Statistics::SetAnimalStats(AnimalStats stats) {
+	m_energy_value->setText(QString::number(stats.energy));
+	m_age_value->setText(QString::number(stats.age));
+	m_kills_value->setText(QString::number(stats.kills));
+	m_synthesize_value->setText(QString::number(stats.synthesize));
+	m_reproduction_value->setText(QString::number(stats.reproduction));
+	m_x_value->setText(QString::number(stats.x));
+	m_y_value->setText(QString::number(stats.y));
+	int s = stats.color.hsvSaturation();
+	m_color_value->setText(QString("%1,%2,%3").arg(QString::number(stats.color.hsvHue()), QString::number(stats.color.hsvSaturation()), QString::number(stats.color.lightness())));
+}
+
+void Statistics::HideAnimalStats() {
+	// hide animal grid
+}

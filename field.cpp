@@ -1,4 +1,5 @@
 #include "field.h"
+#include "statistics.h"
 
 Field::Field(int width, int height) {
 	m_height = height;
