@@ -207,7 +207,7 @@ Animal* Animal::Mutation(Animal* animal) {
 
 	if (Config::GetMutation() && rand() % Config::MUTATION_PROBABILITY == 0) {
 		int mutations_cnt = animal->m_brain->Mutations();
-		color.setHsl((color.hue() + mutations_cnt) % 360, color.saturation(), color.lightness());
+		color.setHsl((color.hslHue() + mutations_cnt) % 360, color.hslSaturation(), color.lightness());
 	}
 
 	std::pair<int, int> pos = animal->LooksAt();
