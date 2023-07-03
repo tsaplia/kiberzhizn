@@ -54,7 +54,6 @@ public:
 
 
 	static constexpr double WATER_LAVEL = 0.85;
-	const static int COLORS_IN_MOUTION = 10;
 	const static int MAX_AGE = 255;
 
 	const static int MUTATION_PROBABILITY = 5;
@@ -66,5 +65,5 @@ public:
 	const static int COLS = 160;
 	const static int DEFAULT_INTERVAL = 500;
 
-	const static int FLASH_INTERVAL = 50;
+	const static int FLASH_INTERVAL = 200;
 };

@@ -92,9 +92,9 @@ void Animal::Attack() {
 }
 
 bool Animal::CanReproduce() {
-    std::pair<int, int> look = LooksAt();
-    return look != NOT_CORD && !m_parent->GetAnimal(look.first, look.second) &&
-        (m_energy > Config::GetReproductionEnergy() || (Config::GetAlternative() && m_energy > 1));
+	std::pair<int, int> look = LooksAt();
+	return look != NOT_CORD && !m_parent->GetAnimal(look.first, look.second) &&
+		(m_energy > Config::GetReproductionEnergy() || (Config::GetAlternative() && m_energy > 1));
 }
 
 void Animal::Reproduction() {
@@ -172,11 +172,13 @@ std::vector<double> Animal::GetBrainInput() {
 
 QColor Animal::GetLifeColor() {
 	QColor color = QColor(255, 255, 0);
-	if (m_synthesis_cnt / 2 > m_attacks_cnt) {
-		color.setRed(std::max(0, 255 - Config::COLORS_IN_MOUTION * (m_synthesis_cnt / 2 - m_attacks_cnt)));
+	int total = m_synthesis_cnt + m_attacks_cnt;
+
+	if (m_synthesis_cnt > m_attacks_cnt) {
+		color.setRed(255 - 255 * (m_synthesis_cnt - total / 2) * 2 / (total + 1));
 	}
-	else {
-		color.setGreen(std::max(0, 255 - Config::COLORS_IN_MOUTION * (m_attacks_cnt - m_synthesis_cnt / 2)));
+	else if (m_synthesis_cnt < m_attacks_cnt) {
+		color.setGreen(255 - 255 * (m_attacks_cnt - total / 2) * 2 / (total + 1));
 	}
 	return color;
 }
@@ -194,7 +196,7 @@ QColor Animal::GetAgeColor() {
 }
 
 AnimalStats Animal::GetStats() {
-	return	 {m_energy, m_age, m_attacks_cnt, m_synthesis_cnt, m_reproduction_cnt, m_color, m_x, m_y};
+	return	 { m_energy, m_age, m_attacks_cnt, m_synthesis_cnt, m_reproduction_cnt, m_color, m_x, m_y };
 }
 
 Animal::~Animal() {
@@ -206,8 +208,8 @@ Animal* Animal::Mutation(Animal* animal) {
 	QColor color = animal->m_color;
 
 	if (Config::GetMutation() && rand() % Config::MUTATION_PROBABILITY == 0) {
-		int mutations_cnt = animal->m_brain->Mutations();
-		color.setHsl((color.hue() + mutations_cnt) % 360, color.saturation(), color.lightness());
+		int mutations_cnt = brain->Mutations();
+		color.setHsl((animal->m_color.hslHue() + mutations_cnt) % 360, animal->m_color.hslSaturation(), animal->m_color.lightness());
 	}
 
 	std::pair<int, int> pos = animal->LooksAt();
